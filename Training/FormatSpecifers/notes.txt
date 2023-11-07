@@ -1,0 +1,10 @@
+Format specifiers are used when displaying var as output
+    - specify the type of data of the variable to be displayed
+
+int sum = 89;
+
+printf("The sum is %d\n", sum);
+
+    %d is the format specifier. 
+        - specifies that the variable being printed is of the int data type
+

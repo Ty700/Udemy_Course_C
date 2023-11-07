@@ -1,0 +1,38 @@
+#include <stdin>
+
+scanf() - general function for collecting input from keyboard
+
+%s - strings
+%d - ints
+%c - chars
+%f - floats
+
+printf() uses variable names, constants, and expressions in arg list
+
+scanf() uses pointers to variables
+
+3 Rules for scanf():
+    1. Returns the number of items that it reads
+    2. If you use scanf() to read a value for one of the basic variable types we've discussed, preced the var name with an '&'
+    3. If you use scanf() to read a string into a char array, don't use an '&'
+
+scanf() uses whitespace to decide how to divide the input into seperate fields
+
+scanf() is the opposite of printf()
+
+Ex:
+
+#include <stdio.h>
+
+int main(){
+    int i;
+
+    printf("Enter a value: ");
+
+    scanf("%s %d",str, &i); //Grabs a String and an int from user
+
+    printf("You've entered: %s %d", str, i); //Just prints it out
+
+}
+
+Have to input in the order that scanf() is asking for

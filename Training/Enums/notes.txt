@@ -1,0 +1,42 @@
+
+User defined data type that allows a programmers to define a variable and specify the valid values that could be stored into that variable
+
+Ex:
+
+    Can create a variable named "myColor" and it can only contain one of the primary colors
+
+
+First have to define the enum type and give it a name
+    initiated by the keyword enum
+    then the name of the enumerated data type
+    then list of identifiers that define the permissible values that can be assigned to that type
+
+To declare a variable to be of type enum primaryColor
+    use the keyword enum
+    followed byt the enum type name
+    followed by var name
+
+Coding Example:
+    enum primaryColor {red, blue, yellow};
+
+    enum primaryColor x = green; //Error - unless I add green inside the enum
+    enum primaryColor y = red; //No Error
+
+    enum primaryColor myColor, someoneElseColor; //Declared but not assigned
+
+Another One:
+    enum month {January, Feburary, March, April, May, June, July, August, Septemebter, October, Novemeber, Decemeber}
+
+Compiler treats enums identifiers as constant ints
+
+enum month thisMonth;
+
+thisMonth = Feburary;
+//thisMonth = month[1] essentially 
+
+If I want the identifier's constant int to be something else I can explicitly define it:
+
+    enum direction {up, down, left = 10, right};
+
+    up = 0, down = 1, left = 10, right = 11 NOT 3
+

@@ -1,0 +1,9 @@
+
+Chars must be surrounded by '<Insert Char>' & ! "<Insert Char>"
+
+With double quotes, the compiler will think it's a string & ! a char
+
+char a = 'A';
+char A = "A"; //Wrong - thinks its a string
+char b = b; //Wrong - thinks its a variable now
+
