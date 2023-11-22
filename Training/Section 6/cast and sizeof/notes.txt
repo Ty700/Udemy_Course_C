@@ -1,0 +1,7 @@
+Casting - I know
+
+(int)<var_name> 
+(double)<var_name>
+etc
+
+sizeof(<var_name>) - will return number of bytes var holds in memory

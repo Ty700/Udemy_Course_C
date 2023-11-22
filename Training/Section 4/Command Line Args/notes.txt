@@ -1,0 +1,13 @@
+Sometimes the program needs data entered by the terminal.
+
+main() has two args.
+
+argc - total num of arguments
+argv[] is a vector with type char *.
+
+Example:
+
+./a <arg1> <arg2> <argn>
+
+argv[0] - name of file
+argv[1] - argv[n] => data we passed in the same order as above.

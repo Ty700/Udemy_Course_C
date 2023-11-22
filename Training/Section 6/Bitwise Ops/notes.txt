@@ -1,0 +1,41 @@
+C offers bitwise logical operators and shift operators
+
+    - looks something like the logical operators you saw earlier buyt are quite different
+    - operate on the bits in ineger values
+
+Not used in the common program
+
+I know what these do, not gonna explain
+
+Bitwise OR:
+
+    1011
++   0100
+    ----
+    1111
+
+Bitwise AND:
+
+    1011
+*   0100
+    ----
+    0000
+
+    1111
+*   1101
+    ----
+    1101
+
+Can store a lot of data like this
+
+Each bit can hold a T/F value.
+
+If we have 4 bytes, 32 bits, we can have 32 T/F values
+
+Bitshift left/right
+
+A: 0001
+
+A >> 2 will shift the bits right by 2. Thus: 0001 => 0000. Does not carry over like the shift in ASM.
+
+A >> 2 will shift the bits left by 2. Thus: 0001 => 0100.

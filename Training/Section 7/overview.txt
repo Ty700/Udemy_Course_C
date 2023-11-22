@@ -1,0 +1,5 @@
+Control Flow
+
+if, switch, loops
+
+I know a lot of this. Will skim and not take notes unless I deem it valuable for C syntax

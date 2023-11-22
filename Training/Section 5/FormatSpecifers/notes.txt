@@ -8,3 +8,6 @@ printf("The sum is %d\n", sum);
     %d is the format specifier. 
         - specifies that the variable being printed is of the int data type
 
+    Lots of other format specifers, reference a sheet on C reference. Should be same website as CPP reference
+
+    

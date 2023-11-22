@@ -1,0 +1,61 @@
+Arrays
+
+Fixed size, same data type in the array
+
+example:
+long numbers[10];
+    - creates an array of type long, with size 10.
+
+seen these in C++ all the time, but not the STL onces, raw array.
+
+Can access elements like:
+    numbers[0], numbers[1], etc etc...
+
+init values for arrays examples:
+    int counter[5] = {1, 2, 3, 4, 5};
+
+float sample_data [500] = {100.0, 200.0, 500.5};
+    - first 3 elements are 100.0, 200.0, and 500.5, and the rest are 0. - Sike its random data
+
+Designated initializers:
+    allows us to pick and choose which elements are initialized.
+    example:
+        - float sample_data[500] = {[2] = 500.5, [1] 300.0, [0] = 100.0, [453] = 123.45};
+            - {[<num>] = value,} inits the element <num>  with value
+
+C doesn't give tools to init all values in an array to something besides 0.
+    - Can put it in a for loop and init it that way.
+
+    for(int i = 0; i < arr.size(); i++){
+        arr[i] = value;
+    }
+
+Multidimensional array
+        [ROW][COL]
+int matrix[3][2] = {
+        {1,2}, 
+        {0,0},
+        {1,1},
+};
+
+Designated initializers:
+int matrix[3][2] = {
+    [0][0] = 1, [1][1] = 2, [2][2] = 0
+};
+The rest will be junk data
+
+Variable length Arrays
+instead of arr[100]; you can do like:
+
+x = 100;
+arr[x];
+
+how you get x is arbirtary
+
+x has to be of type int && >0. 
+
+arr[x+1]; valid
+arr[sizeof(int) + 1]; valid
+arr[(int)2.5]; valid
+arr[-1]; invalid
+arr[0] invalid
