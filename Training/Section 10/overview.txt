@@ -1,0 +1,61 @@
+Strings - Always hear "C-style string" vs C++ strings so I am gonna take notes.
+
+For chars its:
+    char c = 'A';
+
+For char arrays AKA strings:
+    char *c = "ABCDEF";
+
+    or
+
+    char *c[] = {'A', 'B', 'C', 'D', 'E', 'F'};
+
+Important:
+    Chars = ''
+    Strings = ""
+
+To print escape chars, or like special chars that can be interpreted as a format
+specifer it's just like C++.
+
+Null-terminated
+
+"This is a string." => "This is a string\0"
+
+Added so compiler knows where string ends.
+
+String is always Null Character.
+    Thus string array is always +1
+    NULL is a sumbol that represents a memory address that doesn't reference anything
+        - for pointers
+
+You can add a \0 char to the end of a string and it will create two strings
+
+example:
+
+printf("The character\0 is used to terminate a string.");
+
+Will print:
+    "The character"
+
+The implicit \0 behind the period never gets reached.
+
+Defining a string:
+
+C has no special variable type for strings
+    - this means there are no special operators in the language for processing strings
+    - the STL provides an extensive range of functions to handle strings.
+
+strings in C are stored in an array of type char.
+    - chars in a string are stored in adjacent mem cells, one char per cell.
+
+Declaring:
+    char my_string[20];
+        - can hold 19 chars as the /0 takes the last one.
+
+Init example:
+    char word[] = {'H', 'e', 'l', 'l', 'o', '!'};
+        - compiler will compute length of array and add 1 for null char.
+        - this way is annoying
+    
+    char word[] = {"Hello!"};
+        - is much better. Let compiler determine length
