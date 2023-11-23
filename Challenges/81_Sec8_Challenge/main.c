@@ -141,7 +141,7 @@ bool check_for_winner(const char moves[], int turn_counter){
     } 
 
     if(turn_counter == 8){
-        printf("%sIt's a draw!\n", RED);
+        printf("%sIt's a draw!%s\n", GRN, WHT);
         return true;
     }
 
