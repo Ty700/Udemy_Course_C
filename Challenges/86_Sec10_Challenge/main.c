@@ -24,7 +24,6 @@ int main(void){
     char str1[] = "Hello!";
     char str2[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!";
     char str1Copy[] = "Hello!";
-    char result[100];
     char *allStrings[] = {str1, str2, str1Copy};
 
     //String Lenght
