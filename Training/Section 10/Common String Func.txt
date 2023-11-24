@@ -1,0 +1,46 @@
+String Functions
+
+Strings are char arrays with a null char at the end
+
+strlen() - returns length of string
+    - returns as a size_t
+    - needs #include <string.h>
+
+strcpy() & strncpy() - copying one char to another
+    - strcpy(<copies to var>, <copies this char array>);
+    - doesn't check if src has a big enough array size to copy every char from destin
+    - strncpy() - safer way
+        - takes three args strncpy(<dest>, <src>, <amount to copy>);
+        - Example: strncpy(dest, src, 10);
+            - will copy the first 10 chars from src to dest
+
+strcat() & strncat() - combining two char strings
+    - takes two args
+    - a copy of the second arg is tacked onto the end of the first
+    - this combination becomes a new string
+    - second string arg is not altered
+
+    - returns the value of its first arguement
+        - the address of the first character of the string to which the second is appended
+
+    -strcat() has the same problem as strcpy()
+        - doesn't check for buffer overfloy
+        -safer option is the strncat()
+            - strncat(dest, src, 15);
+                - will tack onto the first 15 chars in src to the end of dest.
+
+strcmp() and strncmp() - comparing two strings
+    - does not compare arrays, so it can be used to compare strings stored in arrays of different sizes
+        - you can use arguments such as "apples" and "A" but can not do char args such as 'a'
+    - this function does for strings what relational operatorss do for numbers
+        - it returns 0 if its two string arguments are the same and nonzero otherwise
+            - returns < 0 when it indicates str1 is less than str2
+            - returns > 0 when it indicates str2 is less than str1
+    
+    - strncmp() will compares strings until it finds corresponding characters that different
+        - could take the search to the end of one of the strings
+        - strncmp() function compares the strings until they differ or until it has compared a number of chars
+            specified by a third arguement
+        
+        
+

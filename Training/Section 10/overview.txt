@@ -59,3 +59,67 @@ Init example:
     
     char word[] = {"Hello!"};
         - is much better. Let compiler determine length
+    
+How to assign a value to a string after declaring it
+
+Bad Example:
+    char s[100];
+    s = "Hello"; 
+        - this will not work.
+        - since s is an array, you have to specify index to put "Hello"
+        - since s is type char, you can't a string in a single cell.
+    
+    you can use strncpy{} to assign a value to a char array after it has been declared or inited.
+
+My Question:
+    - I wonder if you could just use a for loop starting from beginning of char array, taking first index in string
+        placing in iterator index, then rinse and repeating to avoid importing a whole lib.
+
+    -maybe even a while until iterator != '\0'
+
+Displaying a string:
+    - to display a string as output using the printf function, you do the following:
+        printf("The message is: %s", messasge);
+            - %s is string format specifier
+            - message is the char array
+
+Inputting a string:
+    to input a string via the keyboard:
+
+    char input[10];
+    printf("Please input your name: ");
+        scanf("%s", input);
+    
+    - don't need to provide & as input is a pointer to the beginning of char array (if it works like C++)
+
+    - will only read up until a space
+
+Testing if two strings are equal:
+    - Have to compare each index of the char arrays together
+    - can't use s1 == s2
+
+Reminder:
+    'x' != "x"
+    'x' is a basic char type
+    "x" is char array with {'x', '\0'}
+
+Constant Strings
+
+#define and const
+    - I know what this is
+
+Two ways of defining constants
+
+#define PI 3.14<numbers>
+
+or 
+
+const float PI = 3.14<numbers>
+
+difference is const float PI is in memory and #define PI is not.
+
+preprocessor replaces everywhere "PI" is with value it's defined to.
+    - best way for saving memory (I think)
+
+#define at the top of the program on in an include file if I want to use it in multiple
+src files.
