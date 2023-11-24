@@ -65,6 +65,9 @@ char *string_cat(const char str1[], const char str2[]){
         }
         i += 1;
     }
+
+    result[string_length(result)] = '\0';
+
     return result;
 }
 
