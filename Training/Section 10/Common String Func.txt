@@ -42,5 +42,120 @@ strcmp() and strncmp() - comparing two strings
         - strncmp() function compares the strings until they differ or until it has compared a number of chars
             specified by a third arguement
         
-        
+Searching a string:
+    string.h declares several string-searching functions for finding a single char or a substring
+        - strchr() and strstr()
 
+    tokenizing a String 
+        - a token is a sequence of characters within a string that is bounded by a demlimiter (space, comma, period, etc)
+        - breaking a sentence into works is called tokenizing
+        - strtok()
+
+    analyzing strings
+        - islower(), isalpha(), isupper(), isdigit(), etc
+
+Concept of a pointer
+    - in order to understand some of these string functions, we have to understand pointer concepts
+    - C provides a very useful type of data, called a pointer
+    - its value is the address of another location in memory that contains a value
+    - we have used addresses in the past with scanf() function.
+    - C doesn't have a garbage collector
+        - & operator = "address of " operator
+    
+    int num = 25;
+    int *pNum = &num; 
+
+    declared a var with value 25.
+    declared a pointer with a pointer to the address of the memory location that holds the value 25.
+    
+    *pNum on the RHS would give "dereference" the pointer and grab the vaue at it.
+
+Back to string functions:
+
+Searching a string for a character:
+    - the strchr() function searches a given string for a specified char.
+        - first arg is string to be searched
+        - second arg is the char we are looking for
+    
+    - the function will seach the string starting at the beginning and return a pointer to the first position
+        in the string where the char is found.
+            -the address of this position in memory
+            - is of type char *
+    
+    - to store the value that's returned you must create a variable that can store the address of the character.
+        - pointer
+    
+    - if the character is not found, the function will return NULL
+        - points to nothing.
+        - equalivent of 0. 
+        - Example: int *pNum = 0;
+        - Example: int *pNum = NULL;
+
+Example:
+    char str[] = "The quick brown fox";
+    char ch = 'q';
+    char *pFound = NULL;
+    pFound = strchr(str, ch); //Stores address of "quick brown fox".
+    
+Searching a string for a substring:
+    the strstr() function:
+        - searches a string for a substring
+        - returns one string for the first occurrence of a substring
+        - returns a pointer to the positiuon in the first string where the substring is found
+        - if no match, returns NULL
+
+Example:
+    char text[] = "Every dog has his day.";
+    char word[] = "dog";
+    char *pFound = NULL;
+    pFound = strstr(text, word);
+
+    - searches the text for the first occurrence of the string stored in word
+        - the string "dog" appears starting at the seventh character in text
+        - pFound will be set to the address text + 6 ("dog has his day")
+        - search is case sensitive "Dog" will not be found
+
+Tokenizing a string:
+    - a token is a sequence of characters within a string that is bound by a delimiter
+    - a delimiter can be anything, but should be unique
+        - space, comma, and a period are often used
+    - breaking a sentence into words is called tokenizing
+    - the strtok() function is used to tokenize a string
+        - two args:
+            - first: string to be tokenized
+            - second: a string containing all the possible delimiter chars.
+
+Example:
+    char str[] "Hello how are you - I am Tyler";
+    const char s[] = "-";
+    char *token;
+
+    token = strtok(str, s);
+
+    while(token != NULL){
+        printf("%s\n", token);
+        token = strtok(str, s);
+    }
+
+Converting Strings:
+    - very common to convert character case
+        - upper to lower
+        - lower to upper
+
+    - toupper() func converts from lower to upper
+    - tolower() func converts from upper to lower
+
+String to numbers:
+    atof() - string to an float
+        - atof "ASCII to float"
+        - useful for when you have a string like "98.4"
+            - you can use atof() of "98.4" to conver to from string to float
+    
+    atoi() - string to an int - similar to atof() but with strings like "98"
+        - can convert "98" to int type of 98
+    
+    atol() - string to long
+
+    atoll() - string to long long
+
+    strtod() 

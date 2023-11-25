@@ -1,0 +1,259 @@
+You can assign an address to a pointer:
+    - array name
+    - &<var_name>
+    - second pointer
+
+You can dereference a pointer
+    - *<ptr_name>
+
+You can take the pointer address
+    - &<ptr_name>
+
+You can preform pointer arithmetic
+    - use the + operator to add an integer to a pointer or a pointer to an integer
+    - increment or decrement by 1
+        - useful for an array to go to the next/previous element
+    - use the - operator to subtract an integer from a pointer
+        - when +/- from a pointer, it will * the number of bytes the in the pointed-to data type and +/- from original address
+
+    - You can find the distance between two pointers
+        - do this for two pointers to elements that are in the same array to find out how far apart elements are
+    
+    - Can use relational operatoors to compare the values of two pointers
+        - pointed to type has to be the same
+    
+    - Two forms of subtraction:
+        - subtract one pointer from another to get an integer
+        - subtract one pointer from integer to get another pointer
+
+    - Be careful when incrementing or decrementing pointers and causing an "out of bounds" error
+        - for arrays
+    
+Pointers used in expressions
+    - the value referenced by a pointer can be used in arithmetic expressions
+        - if a var is defined to be of type "pointer to int" it will follow int arithmetic rules
+
+    Example:
+        int number = 10;
+        int *pNumber = &number;
+        *pNumber += 25;
+
+    - this increments the number var by 25
+    - if a pointer points to a variable x    
+        - that pointer has been defined to be a pointer to the same data type as x
+        - use of *<ptr_name> is an expression is identical to the use of x in the same expression
+            -*pNumber += 25; <=> number += 25;
+
+    - a variable defined as a pointer to int can hold the address of an int
+
+When receiving Input:
+    - when we have used scanf() to input values, we have used the & operator to obtain the address of a pointer
+        on the variable that is to store the input
+    
+    - so scanf() 2nd arg can be a pointer since it's value is a mem location
+
+    Example:
+        int value = 0;
+        int *pValue = &value;
+
+        scanf("%d", &value);
+        OR 
+        scanf("%d", pValue); 
+
+        both are valid
+
+Testing for NULL
+    - one rule for pointers.
+        - do not dereference an uninit pointer
+
+    Example:
+        int *pt;
+        *pt = 5; 
+        - we are changing the value of a random memory location to 5... could be crucical memory location
+
+    - Creating a pointer only allocates memory to store the pointer itself.
+        - it does not allocate memory to store data
+        - before you use a pointer, it should be assigned a memory location that has already been allocated.
+            - assign the address of an existing variable to the pointer
+            - or use malloc() to allocate memory first
+    
+    - We already know that when declaring a pointer that does not point to anything, we should init it to NULL
+
+    int *pValue = NULL; <=> int *pValue = 0;
+
+    Testing for NULL:
+        if(!pValue) //if pValue is not NULL
+        {
+            //assign a value to pValue
+        }
+
+    - used often when pointers are passed to functions
+
+Pointers and Const
+
+When we use the const modifier on a var or an array it tells the compiler that the contents of the var/array will NOT be changed.
+
+with pointers we have to consider two things when using the const modifier
+    -whether the pointer will not be changed
+    or 
+    - whether the value that the pointer points to will not be changed
+
+
+Constant pointed to value Example:
+    long value = 9999L;
+    const long *pValue = &value;
+        - defines a pointer to a constant
+        - declared the value pointed to by pValue is to be constant.
+            - the compiler will check for any statements that attempt to modify the value pointed to by pValue and flag such 
+                statements as an error
+    *pValue = 9998L; 
+        - error
+    - you can still change value, but not *pValue;
+
+    value = 9998L; 
+        - valid
+    - Now pValue points to an address with a value of 9998L
+
+    Can also change what address pValue points to
+        pValue = &number;
+            - no error
+            - still can't change number value through its pointer
+    Summary:
+        const long *pValue - &value;
+            - constant value at value
+            - can change address of pValue
+            - can change value through value variable
+
+Constant Pointed to address Example:
+    - might want to ensure the address that the pointer points to never changes
+
+    - can do this by using the const keyword in the declaration by:
+
+    int *const pCount = &count;
+        - this means the address can never change
+    
+    pCount = &number;
+        - error
+
+    *pCount = 25;
+        - valid
+    
+    count = 25;
+        - valid
+    
+
+You can create a constant pointer that points to a const:
+
+const int *const pItem = &item;
+
+    - can not change value of item through pointer
+        *pItem = 25;
+            - error
+    - can not change address of pItem
+        - pItem = &another_item;
+            - error
+    - can still change value of item through item var
+        item = 25;
+            - valid unless item was a constant
+        
+        if item was declared like:
+            const int item = 25;
+                - then item = 100;
+                    - error
+
+Void pointers
+
+    - The type name void means absence of any type
+
+    - A pointer of type void * can contain the address of a data item of any type
+        - void * is often used as a parameter type or return value type with functions that deal with 
+        data in a type-independent way
+            - THIS IS HOW WE DO TEMPLATES IN C BIG FOG OF WAR REMOVAL MOMENT
+    
+    - Any kind of pointer can be passed around as a value of type void*
+        - the void pointer does not know what type of object it is pointing to, so it cannot be dereferenced directly
+        - the void pointer must first be explicitly cast to another pointer type before it is dereferenced
+
+    - The addres of a variable of type int can be stored in a pointer variable of type void *
+
+    - When you want to access the integer value at the address stored in the void* pointer, you must first cast the pointer to type int*
+        - match a switch case where it grabs the number of bytes it points to and casts corressponding type???        
+
+Pointers and arrays
+
+    - An array is a collection of objects of the same type that you can refer to using a single name
+    - A pointer is a varaible that has its value a memory address that can reference another variable or constant of a given type
+    - arrays and pointers seem quite different, but they are very closely related and can sometimes be used interchangeable
+    - one of the most common uses of pointers in C is a pointer to arrays
+    - the main reasons for using pointers to arrays are ones of notational convenience and of program efficiency
+        - I think it's because the array name is the pointer to the first element in that array
+        - IDK through
+    - pointers to arrays generally result in code that uses less memory and executes faster
+    
+    If you have an array of 100 ints:
+        int values[100];
+    
+    - you can define a pointer called valuesPtr which can be used to access the integers contained in this array
+    
+    - when you define a pointer that is used to point to the elements of an array, you do not designate the pointer as type "pointer to array"
+        - you designate the pointer as pointing to the type of element that is contained in the array
+
+    - to set valuesPtr to point to the first element in the values array you write:
+        int *valuesPtr = values;
+    
+    - the & operator is not used since values already holds the mem location of the first element
+        - I WAS RIGHT :D 
+    
+    - an equivalent way of producing a pointer to the start of an array is:
+        int *valuesPtr = &values[0];
+        - This makes it more explict that its a pointer to an array w/out looking at declaration
+    
+    - This means that ar[i] = *(ar + i)
+        - both work if ar is name of an array and both work if ar is a pointer var
+        - using expression such as ar++ only works if ar is a pointer var
+
+Pass by reference
+    - There are a few different ways you can pass data to a functions
+        - Pass by value
+            - normal "copy" of a data
+
+        - Pass by reference
+            - pass data as itself, no copy
+        
+        C does exclusively pass by value
+
+        You can do pass by reference by doing pointers? I think.
+            - You can only simulate behavior of pass by reference in other languages
+        
+        - pass by value is when a function copies the actual value of an arguement into the formal parameter of the function
+            - changes made to the parameter inside the function have no effect on the arguement
+        
+        - C programming uses call by value to pass args
+            - means the code within a function cannot alter the arguements used to call the functions
+            - there are no changes in the values, though they have been changed inside the function
+            - this is why we used global vars to share data between one func to the next
+        
+        - If you pass an arguement by memory location, or pointer, it can alter the data at that location mimicing pass by ref.
+            - I WAS RIGHT AYEOOO
+
+        - Pointers and functions get along quite well together
+            - you can pass a pointer as an argument to a function and you can also have a function return a pointer as a result
+            
+            - pass by reference copies the address of an arguement into the formal parameter
+                - the address is used to access the actual argument used in the call
+                - means the changes made to the parameter afdfect the passed argument
+
+            -to pass a value by reference, argument pointers are pass to the functions just like any other value
+                - you need to declare the function parameters as pointer types
+                - changes inside the function are reflected outside the function as well
+                - unlike call by value where the changes do not reflect outside the function
+            
+            Example:
+
+            void swap(int *x, int *y){
+                int temp;
+                temp = *x;
+                *x = *y;
+                *y = temp;
+
+            }

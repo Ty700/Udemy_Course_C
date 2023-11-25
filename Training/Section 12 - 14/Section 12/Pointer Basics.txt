@@ -1,0 +1,167 @@
+Indirection
+
+Pointers are very similar to the concept of indirection taht you employ in your everyday life.
+    - suppose you need to buy a new ink cartridge for your printer.
+    - all purchases are handled by the purchasing department
+        - you call joe in purchasing department and ask him to order the new ink
+        - joe then calls the local supply store and orders the ink
+    
+In programming languages, indirection is the ability to reference something using a name, reference, or
+container, insteadof the value itself.
+
+The most common form of indirection is the act of manipulating a value through its memory address.
+
+A pointer provides an indirect means of accessing the value of a particular data item.
+    - a variable whose value is a memory address
+    - its value is the address of another location in memory that can contain a value
+
+Just as there are reasons why it makes sense to go through the purchasing department to order new ink
+    - there are good reasons why it makes sense to use pointers in C
+
+Using pointers in your program is one of the most powerful tools avaliable in the C language
+
+Pointers are also one of the most confusing concepts of the C language
+    - it is important you get this concept figured out in the beginning and maintain a clear idea of what is
+    happening as you dig deeper.
+
+The compiler must know the type of data stored in the variable to which it points to
+    - needs to know to allocate right amount of memory.
+    - every pointer will be associated wiht a specified variable type
+    - it can be used only to point to vars of that type
+
+Example:
+
+    - number has an address of x1008
+        - int number = 99; //&number = 1008
+        - int *pNumber = &number; //pNumber points to 1008
+        the dereference value of pNumber is equal to the value at the location x1008 (99)
+
+Why use pointers?
+    - accessing data by means of only variables is very limiting.
+        - with pointers you can access any location and perform arithmetic with pointers
+        - essentially treating every memory location as a variable
+    - some pointers in C make it easier to use arrays and string
+    - pointers allow you to refer to the same space in memory from multiple locations
+        - means that you can update memory in one location and the change can be seen from another
+            location in the program
+    - can save space by being able to share components in your data structs
+
+    - pointers allow functions to modify data passed to them as variables
+        - pass by reference - passing args to function in way they can be changed by function and not forcing a copy
+    
+    - pointers allow us to get multiple values from the function
+        - a function can return only one value but by passing arguments as pointers we
+        can get more than one value from the pointer
+    
+    - with pointers dynamic memory can be created according to the program use
+        - we can save memory from static(compile time) declarations
+    
+    - pointers allow us to design and develop complex data structures like a stack, queue, or linked list
+
+    - pointers provide direct memory access
+
+Defining Pointers:
+    - pointers are not declared like normal variables;
+
+    pointer ptr; //Wrong
+
+    - it is not enough to say that a variable is a pointer
+        - you also have to specify the kind of variable to which the pointer points to
+        - different types take up different amount of storage
+        - some pointer operations require knowledge of that storage size
+    
+    - you declare a pointer with an *
+
+    Example:
+        int *pNumber;
+    
+    - the type of the variable with the name pNumber is int*
+        - you can store the address of any variable with type int in pNumber
+    
+    int *pi; //pointer to int
+    char *pc; //pointer to char
+    float *pf; //Pointer to float
+
+    - the space between the * and the pointer name is optional
+        - programmers use the space in a declaration and omit it in the dereference
+    
+    - the value of a pointer is an address, and is represented internally as an unsigned integer on most systems.
+        - however, don't think of pointers as an integer
+    
+    - format specifier for pointer is %p
+    - always want to init a pointer to something, whether it's NULL or to another variable.
+
+    Example:
+        int *pNumber = NULL;
+            - points to nothing
+        int *pNumber points to somewhere but we don't know.
+
+        NULL guarntess it points to nowhere and is safer
+
+        must inlude stddef.h for NULL
+
+Address of operator
+    - if you want to init your variable with the address of a variable you have already declared
+
+    Eaxmple:
+        int number = 99;
+        int *pNumber = &number;
+
+        - the init value of pNumber is the address of the variable number
+            - the declaration of number must preced the declaration of the pointer that stores its address
+            - compiler must have already allocated space and thus an address for number to use it to initialize pNumber
+                - obviously
+        
+    Be careful
+        - there is nothing special about the declaration of a pointer
+        - can declare regular variables and pointers in the same statement
+
+    Example:
+        double value *pVal, fnum; //pVal is double pointer, fnum is a double
+        int *p, q; //p is an int pointer, q is int
+    
+        - p and q are NOT both pointers
+        - good idea to name pointers with a p first
+
+Accessing Pointers:
+    - you can use the indirection operator '*' to access the value of the variable pointed to by a pointer
+        - aka dereference operators
+    
+    int number = 15;
+    int *pNumber = &number;
+    int result = 0;
+
+    - the pNumber variable contains the address of the variable number.
+        - you can use this in an expression to calculate a new value for result
+    
+    result = *pNumber + 5;
+
+    - the expression *pointer will evaluate to the value stored at the address contained in the pointer
+        - the value stored in number is 15 + 5 is 20, so 20 is stored in result
+    
+    - the dereference/indirection operator is also the symbol for multiplication, and it is used to specify pointer types
+        - how do we know what * is doing? multiply or is a pointer? AHHH
+            - it's about context.
+            - depending on where the asterisk appears, the compiler will understand whether it should interpret it as an indirection operator, 
+                multiplication sign, or as part of a type specification
+            - context determines what it means in any instance
+
+    - %p outputs pointer value in hex value
+    - pointers occupy 8 bytes and the addresses have 16 hex digits
+    
+Displaying an address:
+    printf("pNumber's address: %p\n", (void *)&pNumber); //(void *) to get around a warning
+
+    - pointer itself has an address just like any other variable
+        - you use %p as the conversion specifier to display pointer
+        - you use the & operator to reference the address that pNumber variable occupies
+        - the cast to void * is to prevent a possible warning from the compiler
+            - the %p specifications expects the value to be some kind of pointer type, but the &pNumber is 
+                pointer to pointer to int
+    
+Displaying the number of bytes a pointer is using:
+    - you use the sizeof operator like normal
+
+    - may get a compiler warning when using sizeof since it's size_t
+    - can get around this by casting to an unsigned int
+    
