@@ -53,7 +53,7 @@ char *string_cat(const char str1[], const char str2[]){
     const int STR1_LENGTH = string_length(str1);
     const int STR2_LENGTH = string_length(str2);
 
-    char* result = (char*)malloc((STR1_LENGTH + STR1_LENGTH)); 
+    char* result = (char*)malloc((STR1_LENGTH + STR1_LENGTH)* sizeof(char)); 
 
     int i = 0;
     

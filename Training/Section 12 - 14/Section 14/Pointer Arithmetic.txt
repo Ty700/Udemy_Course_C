@@ -1,0 +1,36 @@
+The real power of using pointers to arrays comes into play when you want to sequence through the elements of an array
+
+    - *valuesPtr
+        - ptr to int array
+        - can be used to access the first integer of the values array, that is, values[0]
+    - to reference values[3] via valuePtr we would do:
+        *(valuesPtr + 3)
+    
+    - the expression *(valuesPtr + i) can be used to access the value contained in values[i]
+    
+    values[10] = 27;
+
+    or 
+
+    *(valuesPtr + 10) = 27;
+
+    - to set valuesPtr to point to the second element of the values array, you can apply the address operator to values[1] and assign result to valuesPtr
+        valuesPtr = &values[1];
+    
+    - If valuesPtr points to values[0], you can set it to point to values[1] by simply adding 1 to the value of valuesPtr.
+        - valuesPtr += 1;
+     
+    - this is a perfectly valid expression in C and can be used for pointers to any data type
+
+
+    - ++ and -- is really useful
+    
+    - to pass an array to a function, you simply specify the name of the array
+    - to produce a pointer to an array, you need only to specify the name of the array
+
+    - this implies that in the call of a function, what was passed to the function was actually a pointer to an array
+        - explains why you are able to change elements in an array in the function, and it be seen outside the scope of the function
+    
+    - 
+    
+

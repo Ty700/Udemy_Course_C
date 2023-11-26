@@ -1,0 +1,179 @@
+Up until this point, all data from our program accesses is via memory
+    - scope and variety of applications you can create is limited
+
+All serious business applications require more data than would fit into main memory
+    - also depend on the ability to process data that is persistent and stored on an external device
+        such as a disk drive
+
+C provides many function in the header file stdio for writing to and reading from external drives
+    - the external device you would use for storing and retrieving data is typically an HDD/SSD.
+    - however, the lib will work with virtually any external storage device
+
+Files 
+    - programs need to store data on permanent storage
+
+    - a file can store non-volatile data and is usually stored on a disk
+        - a named section of storage
+        - stdio.h is a file containing useful info
+    
+    - C views a file as a continous sequence of bytes
+        - each byte can be read individually
+        - corresponds to the file structure in the Unix environment
+    
+    - A file has a beginning and an end and a current position
+    - the current position is defined by X bytes away from beginning
+        - EOF is the flag for end of file
+
+Text and Binary Files
+    - there are two ways of writing data to a stream that represents a file
+        - text
+        - Binary
+    - text data is written as a sequence of characters organzied as lines
+
+    - binary data is written as a series of bytes excatly as they appear in memory
+    
+    - you can write any data you like to a file
+        - once a file is written, it just consists of series of bytes
+            - even for text
+    
+    - you have to understand the format of the file in order to read it
+        - a sequence of 12 bytes in a binary files could be 12 chars, 12 8-bit signed ints, 12 8-bit unsigned ints, etc
+        - in binary mode, each and every byte of the file is accessible
+
+Streams
+    - C programs automatically open three files on your behalf
+        - standard input - the normal input device for your stream, usually keyboard
+        - standard output - usually display on screen via console
+        - standard error - usually display screen
+    
+    - standard input is the file that is read by getchar() and scanf()
+    - standard output is used by putchar(), puts(), printf()
+        - redirection causes other files to be recognized as the standard input/output
+    
+    - the purpose of the standard error output file is to provide a logically distinct place to send your error messages
+
+    - a stream is an abstract representation of any external source or destination for your data
+        - the keyboard, the command line, and files on a disk are all examples of things you can work with as Streams
+        - the C lib provides functins for reading and writing to or from data Streams
+            - you use the same input/output functions for reading and writing any external device that is mapped to a stream
+        
+Accessing Files
+    
+    - files on disk have a name and the rules for naming files are determined by your OS 
+        - you may have to adjust the names depending on what OS your program is running
+    
+    - a program references a file through a file pointer (or stream pointer, since it works on more than a file)
+        - you associate a file pointer with a file programmatically when the program is run 
+        - pointers can be reused to point to different files on different occasions
+
+    - a file pointers to a struct of type FILE that represents a stream
+        - contains information about the files
+            - whether you want to read or write or update a file
+            - the address of the buffer in memory to be used for data
+            - a pointer to the current position in the file for next operation
+        - the above is all set via input/output file operations
+
+    - if you want to use several files simultaneously in a program, you need a seperate file pointer for each file
+        - there is a limit to the number of files you can have open at one time
+            - defined as FOPEN_MAX in stdio.h
+        
+    Opening a file
+        - you associate a specific external file name with an internal file pointer variable through a process referred to as opening a file
+            - via the fopen() function
+                - returns the file pointer for a specific external file
+        
+        - the fopen() function is in the stdio.h
+
+            FILE *fopen(const char* restrict name, const char* restrict mode);
+
+            - first argument to the function is a pointer to a string that is the name of the external file you want to process
+                - you can specify the name explicity or you a char pointer that contains the address of the character string that defines the file name
+                - you can obtain the file name through the command line, as input from the user, or defined as a const in the program
+            
+            - the second argument to the fopen() is a character string that represents the file mode
+                - specifies what you want to do with the file
+                - a file mode specification is a character string between double quotes
+            
+            - assuming the call to fopen() is successful, the function returns a pointer of type FILE* that you can use to reference the file in further 
+                I/O operations using other functions in the library
+            
+            - if the file cannot be created, will return NULL
+
+    Files Modes (Only for text)
+
+        - "w" - write operations - if file exists will delete what is in it.
+        - "a" - append operations - if file exists will add to the end of what is in it.
+        - "r" - read operations - can only read thus no modications can be done.
+
+        - "w+" - read & write operation + create file if file can't be found. If it does exist, deletes everything in it.
+        - "a+" - append operations + create file if file can't be found.  If it does exist, addiing to the end of what is in it.
+        - "r+" - read operations + create file if file can't be found
+
+        - actually idk what the difference between "w" and "w+" are
+
+    Write Mode
+        - if you want to write to an existing file with the name myFile.txt 
+
+        File *pFile = NULL;
+        char *fileName = "myFile.txt"
+        pFile = fopen(fileName, "w");
+        if(pFile = NULL){
+            //error
+        }
+
+        - opens the file associates the file wiht the name myFile.txt with your file pointer in pFile
+            - the mode as "w" means you can write to the file
+            - you cannot read it
+        
+        - if a file with the name myFile.txt doesn't exist, the call to fopen() will create a new file with this name
+
+        - on opening a file for writing, the file length is truncated to zero and the position will be at the beginning of any existing data for the first operation
+            - any data inside the file will be overwritten and lost 
+        
+    Append Mode
+        - if you want to add to an exisiting text file rather than overwrite it
+            - specify "a"
+            - append mode
+        - this positions the file at the end of the previously written data
+            - file doesn't exist, it will create it
+        
+    Read Mode
+        - read only, can't write
+        - positions the file to the beginning of the data
+        - if you are going to read the file, it must already exist
+            - trying to read a file that doesn't exist, it will be NULL
+        
+    Renaming a file
+        - Renaming a file is very easy
+            - using the rename() function
+        
+        Function declaration:
+            int rename(const char* oldname, const char* newName);
+                - the integer that is returned will be 0 if the change was successful.
+                - non-zero otherwise
+            - the file must NOT BE open when you call rename, otherwise it will fail
+        
+    Closing a file
+        - Do this when you are finished with a file
+        - fclose(FILE* pFile);
+            - returns EOF if an error occurs
+            - after fclose, point pFile to NULL
+
+    Deleting a file
+        - remove() function
+            - in stdio.h ofc
+        
+        remove("myFile.txt");
+
+Reading from a file
+    - the fgetc() function reads a character from a text file that has been opened for reading
+        - fgetsc() takes a file pointer as its only argument and returns the character read as type int
+            - returned type int because of EOF. 
+                - thus we can check if fgetc() == EOF to determine if its at the EOF.
+        - int mchar = fgetc(pFile);
+    
+    - the function getc(), which is equivalent to fgetc(), is also avaliable
+        - requires an argument of type FILE* and returns the character read as type int
+        - virtually identical to fgetc()
+            - only difference between them is the getc() may be implemented as a macro fgetc() is a Function
+        

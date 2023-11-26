@@ -1,0 +1,451 @@
+Structures in C provide another tool for grouping elements together
+    - a powerful concept that you will use in many C programs
+
+Kinda like an object, but not methods
+
+For example, we want to store a date inside a program
+    - we would create variables for a month, day, and year to store
+    int month = 9, day = 25, year = 2015;
+
+Supoose your program also needs to store the date of purchase of a particular item
+    - you must keep track of three sepearte variables for each date that you use in the program
+    - these variables are logically related and should be grouped together
+
+It would be much better if we could somehow group these sets of three vars together
+    - this is what the struct allows us to do in C
+
+Creating a Structure:
+    - a structure declaration how a structure is put together
+        - what element are inside the structure
+    
+    - the struct keyword enables you to define a collection of vars of various types called a structure
+        that you can treat as a single uninit
+    
+Example:
+    struct date {
+        int month;
+        int day;
+        int year;        
+    }
+
+    - the above statement defines what a date structure looks likke to the C compiler
+        - there is no memory allocation for this declaration
+    - just defining the structure
+    - month, day, year are members, or fields, of the structure
+
+Using a structure
+
+    - the defintion of date defines a new type in the languages
+        - the variables can now be declared to be of type struct date
+    - you can now declare more variables of type struct data
+
+    Example:
+        struct date purchaseDate;
+
+    - the above statement declares a variable to be of type struct date
+        - memory is NOW allocated for the variables above
+        - memory is allocated for the three int values for each variable
+
+Accessing members in a struct:
+    - now that we know how to define a structure and declare structure variables, you need to be able to refer to the members of a structure
+    
+    - a structure variable name is not a pointer
+        - you need special syntax to access the members
+
+    - you refer to a member of a structure by writing the variable name followed by a period, followed by the member var name
+        - the period between the structure variable name and the member name is called the member selection operator
+        - there are no spaces permitted between the variable name, the period, and the member name
+    
+    Example:
+        today.day = 25;
+        today.year = 2015;
+
+        - to test the value of month to see if it is equal to 12:
+
+        if(today.month == 12){
+            //whateva
+        }
+
+    - When it comes to the evaluation of expressions, structure members follow the same reules as ordinary variables do
+        - division of an int struct member by another int is preformed as int division
+
+    - You do have some flexibility in defining a structure
+        - it is valid to declare a variable to be of a particular struct type at the same time that the structure is defined
+        - include the variable name(s) before the terminating semicolon of the structure definition
+        - you can also assign initial values to the variables in the normal fasion
+
+    struct date{
+        int month, day, year;
+    } today;
+
+    - this creates an instance of the structure at the same instance the struct is defined.
+        - today is a variable of type date
+
+Un-named Structures
+    - you also do not ahve to give a struct a tag name
+    - if all of the variables of a particular struct type are defined when the structure is defined, the struct name can be ommited
+
+    struct{
+        int day, year, month;
+    } today;
+
+    - a disadvantage is that you can't make another instance of the struct if I wanted to.
+    - the only living instance of a struct would be: today
+
+Initialzing Structures
+    - initing structs is similar to initing arrays
+        - the elements are listed inside a pair of braces, with each element separated by a communicate
+        - the init values listed inside the curly braces must be const expression
+    
+Example:
+
+    struct date {
+        int month, day, year;
+    }
+
+    struct date today = {7, 2, 2015};
+        - important: the order in the {} follows the order in which the members are defined
+            - 7 = month, 2 = day, 2015 = year
+        
+    or:
+
+    struct date today1 = {.month = 7, .day = 10};
+        - year would be set to 0
+    
+    struct date today = {.year = 2015};
+        - other members are 0
+    
+Assignment with compoud literals
+    - you can assign one or more values to a structure in a single statement using what is known as compound literals
+        - today = (struct date){9, 25, 2015};
+    
+    - this statement can appear anywhere in the program
+        - it is not a declaration statement
+        - the type case operator is used to tell the compiler the type of the expression
+        - the list of valuies follows the case and are to be assigned to the members of the structure in order
+        - listed in the same way as if you were initing in the structure variable
+
+    - you can also specify values uising the .member notational
+
+    today = (struct date) {.month = 9, .day = 25, .year = 2015};
+        - advantage of using this approact is that the arguements appear in order
+
+
+Structures and Arrays
+
+    - We have seen how structs can make it easier to logically group variables related together
+        - If we wanted to handle 10 different dates in a program, we'd have to control 10 vars and not 30
+
+    - 10 is still a lot
+    
+    - A better method for handling the 10 different dates involved the combination of two powerful features of C 
+        - structures and arrays
+        - it is perfectly valid to define an array of structures
+        - the concept of an array of structures is a very powerful and important one in C 
+    
+    - declaring an array of structures is like declaring any other array
+
+    struct date myDates[10];
+        - defines an array called myDates, which has 10 elements
+        - each element inside the array is defined to be of type struct date
+        
+        - to idenity members of an array of structures, you apply the same rule used for individual structures
+            - follow the structure name with the dot operator
+        
+        - referencing a particular struct element inside the array is quite natural
+            Example: to set the second date inside the myDates array to August 8, 1986:
+            myDates[1].month = "August";
+            myDates[1].day = 8;
+            myDates[1].year = 1986;
+    
+    Initializing an array of Structures
+        - initing of arrays containing structures is similiar to initing multi-dimensonal array
+
+        struct date myDates[5] = { {12, 10, 1975}, {12, 30, 1980}, {11, 15, 2005}};
+            - sets the first three dates in the arrays
+            - the inner braces are optional but make it easier to read
+        
+        struct date myDates[5] = {[2] = {12, 10, 1975}};
+            - inits the 3 element and only the 3rd element
+        
+        struct date myDates[5] = {[1].month = 12, [2].day = 30};
+            - inits the 2nd element's month to 12
+            - inits the 3rd element's day to 30
+
+    Structures containing arrays
+        - it is also possible to define structures that contain arrays as members
+            - most common use is to set up a char array for Strings
+        - suppose you want to define a structure called month that contains as its member the 
+            number of days in the month as well as a three-character abbreviated for the month name
+        
+        struct month {
+            int numberOfDays;
+            char name[3];
+        };
+
+        - this sets up a month struct that contains an integer member called numberOfDays and a character member called name
+            - member name is actually an array of three chars
+        
+        How do we access it?
+            - you can now define a variable to be of type struct month and set the proper fields inside aMonth for January
+        Example:
+            struct month aMonth;
+            aMonth.numberOfDays = 31;
+            aMonth.name[0] = 'J'
+            aMonth.name[1] = 'a';
+            aMonth.name[2] = 'n';
+        
+        or:
+            aMonth = {31, 'J', 'a', 'n'};
+        
+        - you can now set up 12-month structures inside an array to represent each month of the year
+
+        struct month months[12];
+
+Nested structures
+    - C allows you to define a structure that itself contains other structures as one or more of its members
+
+    - you have seen how it is possible to logically group the month, day, and year into a structure called date
+        - how about grouping the hours, minutes, and seconds into a structure
+    
+    struct time {
+      int hours, minutes, seconds;  
+    };
+
+    - Some applications you'd want to group the dates and times together.
+        - you might need to set up a list of events that are to occur at a particular date and time
+    
+    - you want to have a convient way to associate both the date and time together
+        - define a new structure, called for example, dateAndTime which contains as its members two elements
+            - date and time
+        
+        struct dateAndTime {
+            struct date sdate;
+            struct time stime;
+        };
+
+            - variables can now be defined to be of type struct dateAndTime
+
+            - struct dateAndTime event;
+        
+    Accessing members in a nested structure
+        - to reference the date structure of the variable event, the syntax is the same as referencing any member
+        - event.sdate;
+        - to reference a particular member inside one of these structures, a period following by the member name is taked on the end
+
+        Example:
+            ++event.stime.seconds; //increasing the event's stime's seconds member
+        
+        - the event variable can be inited just like normal
+            struct dateAndTime event = { {2, 1, 2015}, {3, 30, 0}};
+                                    - month, day, year  hour min sec
+        
+        - it is also possible to set up an array of dateAndTime structures
+
+        struct dateAndTime events[100];
+
+        creates an array of size 100 with type dateAndTime
+        
+        events[0].stime.hour = 12;
+        events[0].stime.min = 0;
+        events[0].stime.second = 0;
+
+            - puts the first element's time to notational
+        
+        - you can define the Date structure within the time structure definition
+
+        - struct Time {
+            struct Date{
+                int day, month, year;
+            } dob;
+            int hour, minute, seconds;
+        };
+
+        - creates a variable dob of type Date inside Time
+            - declaration is enclosed within the scope of the Time structure definition
+            - it does not exist outside it
+            - it becomes impossible to declare a Date variable external to the Time structure
+            - only time we can use a date variable is when we create a Time structure
+            - can't create a Date struct by itself.
+
+Structures and Pointers
+    - C allows for pointers to structures
+    - pointers to structures are easier to manipulate than structures themselves
+    - in some older implementations, a structure cannot be passed as an argument to a function, but a pointer to a structure can be.
+    - even if you pass a structure by an arguement, passing a pointer is more efficient.
+    - coping everything in the struct, or just the address to it??
+    - many data representations use structures containing pointers to other structures
+
+    - you can define a variable to be a pointer to a struct
+
+    struct date *datePtr = NULL;
+
+    - the variable datePtr can be assigned just like other pointers
+        - you can set it to point to todaysDate with the assignment statement
+            datePtr = &todaysDate;
+    
+    - you can then indirectly access any of the members of the date structure pointed to by datePtr
+        - (*datePtr).day = 21;
+            - the above has the effect of setting the day of the date structure pointed to by datePtr to 21
+                - parentheseses are required since . operator has higher precedance then *
+
+        if((*datePtr).month == 12){
+            //Do something
+        }
+
+        (*datePtr).month is cumbersome, instead we can use the -> operator
+
+        - datePtr->month == 12 <=> (*datePtr).month == 12
+Example:
+
+    struct date{
+        int month;
+        int day;
+        int year;
+    };
+
+    struct date today, *datePtr;
+
+    datePtr = &today;
+
+    datePtr->month = 9;
+    datePtr->day = 25;
+    datePtr->year = 2015;
+
+    printf("Today's date is %i/%i/%i/%.2i.\n", datePtr->month, datePtr->day, datePtr->year % 100);
+
+Structures containing pointers
+    - a pointer also can be a member of a structure
+
+    struct intPtrs{
+        int *p1;
+        int *p2;
+    };
+
+    - a structure called intPtrs is defined to contain two int pointers
+        - the first one called p1
+        - the second one p2
+    - you can define a variable of type struct intPtrs
+
+    - struct intPtrs pointers;
+
+    - the variable pointers can now be used just like other structs
+        - the pointers itself can now be used just like other structs
+
+Example:
+    struct intPtrs{
+        int *p1;
+        int *p2;
+    };
+
+    struct intPtrs pointers;
+    int i1 = 100, i2;
+    pointers.p1 = &i1;
+    pointers.p2 = &i2;
+
+    *pointers.p2 = -97; //The values at p2 = -97
+
+
+Character arrays or character pointers?
+
+struct names{
+    char first[20];
+    char last[20];
+};
+
+or
+
+struct pNames {
+    char* first;
+    char* last;
+};
+
+    - advantage to pointers
+    - both are valid BUT with one big difference
+    - Have to understand what is happening HOWEVER
+    
+Example:
+
+    struct names veep = {"Talia", "Summers"};
+    struct pNames treas =  {"Brad", "Fallingjaw"};
+
+    - the struct names variable veep
+        - the strings are stored inside the structure
+        - structure has allocated a total of 40 bytes to hold two names
+    
+    - the structure pnames variable treas
+        - strings are stored wherever the compiler stores string constants
+        - the structure holds the two addresses, which takes a total of 16 bytes on our systems
+        - the structure pnames structure allocates no space to store strings
+        - it can be used only with strings that have had space allocated for them elsewhere
+            - such as string constants or string in arrays
+    
+    - the pointers in a pnames structure should be used only to manage strings that were created and allocated elsewhere in the program
+
+    - one instance in which it does make sense to use a pointer in a structure to handle a string is if you are dynamically allocating that memory
+        - use a pointer to store the address
+        - has the advantage that you can ask malloc() to allocate just the amount of space that is needed for a string
+    
+    struct namect{
+        char* fname;
+        char* lname;
+        int letters;
+    };
+
+    - understnad that the two strings are not stored in the structure
+        - stored in the chunck of memory managed by malloc()
+        - the addresses of the two strings are stored in the structure
+        - addresses are what string-handling function typically work with
+    
+Structures and functions
+
+    - after declaring a structure named Family, how do we pass this structure as an argument to a function?
+
+
+    struct Family{
+        char name[20];
+        int age;
+        char father[20];
+        char mother[20];
+    };
+
+    bool siblings(struct Family member1, struct Family member2){
+        if(strcmp(member1.mother, member2.mother) == 0){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    - you should use a pointer to a structure as an argument
+        - it can take quite a bit of time to copy the entire struct
+        - pointers to structures avoid the memory and time consumption
+
+    
+    Same example:
+
+    bool siblings(struct Family* pmember1, struct Family* pmember2){
+        if(strcmp(pmember1->mother, pmember2->mother) == 0){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    - you can also use the const modifier to not allow any modification of the pointers address
+        - any attempt to change those structures will cause an error send_message
+    
+    - the indirection operator in each parameter defintiion is now in front of the const keyword
+        - not in the front of the parameter name
+        - you cannot modify the address stored in the pointers
+        - its the pointers that are proctected here, not the structures to which they point
+    
+Returning a structure from a function
+    - the function prototype has to indicate this return value in the normal way
+
+    struct Date my_fun(void);
+
+    - this is a prototype for a function taking no args that returns a struct of type Date
+    - we can return more than one value this way
+    - it is often more convient to return a pointer to a struct so that its on the hea
+

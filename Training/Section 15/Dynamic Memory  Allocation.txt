@@ -1,0 +1,51 @@
+Whenever you define a variable in C, the compiler automatically allocates the correct amount of storage for you based on the data type
+
+It is frequently desirable to be able to dynamically allocate storage while a program is running
+
+If you have a program that is designed to read in a set of data from a file into an array in memory, you have three choices
+    - define an array to contain the maximum number of possible elements at compile time
+    - use a variable length array to dimension of the size of the array at runtime
+    - allocate the array dynamically using one of C's memory allocation routines
+
+First approach is what we've been doing.
+
+int dataArray[1000];
+    - have to hope that whatever file we are reading doesn't have > 1000 entries.
+    - if it does, we have to redo code and recompile
+    - since it's a fixed size, we always have this issue where the data might need + 1 element slots than allocated
+
+Using the dynamic memory allocation function, you can get storage as you need it
+    - this apporach enables you to allocate memory as you're executing.
+
+Dynamic memory allocation depends on the concept of a pointer and provides a strong incentive to use pointers in code
+
+Dynamic memory allocation allows memory for storing data to be allocated dynamically when your program executes
+    - allocating memory dynamically is possible only because you have pointers avaliable
+    - the majority of production programs will use dynamic memory allocation
+    - allocating data dynamically allows you to create pointers at runtime that are just enough to hold the amount of data
+        you require for the task
+            - very efficiencent with memory, thus good for systems with small memory caps
+
+Heap vs Stack
+    - dynamic memory allocation reserves space in a memory area called the Heap
+    - Heap is for dynamic memory, stack is for local vars, func args, etc
+    - stuff on the heap is controlled by the dev when it gets created vs deleted
+        - also on me to keep track of it
+        - must free/delete unless we want memory leaks :)
+
+Malloc
+    - memory allocation
+    - the simplest standard library function that allocates memory at runtime
+        - needs stdlib.has
+        - you specify the number of bytes of memory that you want allocated as the argument
+        - returns the address of the first byte of memory that is allocated
+        
+    Example:
+        int *pNumber = (int *)malloc(100);
+            - creates 100 bytes on the heap and cast it to an int pointer
+            - thus pNumber can hold 100 bytes for type int
+            - since ints are 4 bytes a piece (assuming), it can hold 25 int values
+            - problem is that int size might differ between systems 
+    
+    Better Example:
+        int *pNumber = (int *)malloc(25 * sizeof(int));
