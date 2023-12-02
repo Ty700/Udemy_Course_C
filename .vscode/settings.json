@@ -11,6 +11,7 @@
         "bitset": "c",
         "string_view": "c",
         "initializer_list": "c",
-        "utility": "c"
+        "utility": "c",
+        "stddef.h": "c"
     }
 }

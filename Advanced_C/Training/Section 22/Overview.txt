@@ -1,0 +1,399 @@
+Overview
+    Socketing
+        - programs on different machines often need to talk to each other
+        - we have already learned how to use I/O to communicate with files
+        - we have learned how processes on the same machine can communicate with each other
+        - luckily, C is used to write most of the low-level networking code on the internet
+        - In this section, we are going to learn how to write C programs that can talk to other programs accross the world
+
+    TCP Protocol
+        - TCP (Transmission Control Protocol) is a standard that defines how to establish and maintain a network conversation through which application programs can exchange data
+        - TCP works wiht the internet protocol (IP), which defines how computers send packets of data to each other
+        - together, the TCP and IP are the basic rules defining the internet
+            - all major internet apps such as the world wide web, email, remote admin, and file transfer rely on TCP
+        - TCP is a connection-oriented protocol 
+            - means a connection is established and maintained until the app program at each end have finished exchanging messages
+        - TCP creates a connection between the source and destination node before transmitting the data and keeps the connection alive
+            until the communication is no longer active
+
+    Client/Server Model
+        - the client server model is a relationship in which one program (the client) requests a service or resource from the program (the server)
+            - two processes or two apps that communicate with each other to exchange some information
+            - one of the two processes acts as a client process, and another process acts as a server
+            - there can be multiple clients that talk to one server
+        
+        - clients typically communicate with servers by using the TCP/IP proctocol suite
+
+        - computer transactions in which the server fulfills a request made by a client are very common 
+            - the client-server model has become one of the central ideas of network computing
+        
+        - the client establishes a connection to the server over a LAN or WAN, such as the internet
+            - client needs to know IP of server. Server doesn't need to know IP or exsitence of client
+        
+        - once the server has fulfilled the client's request, the connection is terminated
+
+        - because multiple client programs share the services of the same server program, a special server called a daemon may be activated
+            just to await client requests
+        
+        - as mentioned, the client process makes a request for information and after getting the response, this process mayh terminate or may do some other processing
+        
+        - an example of a client program would be an internet browser
+            - sends a req for one HTML page to the web server
+        
+        - the server process takes a request from one or more clients
+
+        - after getting a request from the client, this process will preform the required processing, gather the requested information, and send it to the requestor client
+
+        - once done, it becomes ready to serve another client
+        
+        - server processes are always alert and ready to serve incoming requests
+
+        - example of a server process would be a web server
+
+    Types of servers
+        - there are two types of servers you can implement
+
+        iterative server
+            - the simplest form of a server where the server process serves one client at a terminate
+            - after completing the first request, it takes request from another client
+            - other client wait until its their turn
+
+            - not efficent
+
+        Concurrent Server
+            - this type of server runs multiple concurrent processes to serve many requests at a time
+            - one process may take longer and another client does not need to wait too long
+            - the simplest way to write a concurrent server under unix is to fork a child process to handle each client separately
+        
+    Sockets
+        - sockets are the "virtual" endpoints of any kind of network communications done between two computers
+        - socket programming is a way of connection two nodes on a network to communicate with each other
+        - one socket (node) listens on a particular port at an address
+        - another socket reaches out to the other to form a connection
+        - server forms the listener socket while the client reaches out to the server
+        - when you type www.google.com in your web browser
+            - it opens a socket and connects to google.com to fetch a page and show it to you
+            - same with any chat client like skype
+
+        - all network communication goes through a socket
+        - sockets are supported on virtually everything
+    
+    Steps in using sockets to communicate
+        - create a new socket for network communication
+        - attach a local address to socket (bind)
+        - announce willingness to accept connection (listen)
+        - block caller until a connection request arrives
+        - actively attempt to establish a connection
+        - send some data over connection 
+        - receive some data over connection
+        - release connection
+
+The Socket API 
+    - Application Programming Interface (API)
+
+    Include files
+        - the following header files need to be included to work with sockets for network communicatin
+            - include system calls for sockets and socket data
+        
+        <sys/types.h>
+            - contains definitions of a number of data types used in socket calls
+        
+        <sys/socket.h>
+            - the main socket header
+            - includes a number of declarations of structs needed for sockets
+        
+        <netinet/in.h>
+            - contains constants and structs needed for internet domain address
+        
+        <netdb.h>
+            - defines the struct hostent
+
+        <arpa/inet.h>
+            - defines the in_addr struct
+    
+    Ports
+        - a computer might need to run several programs at once
+        
+        - to prevent the different converations from getting confused, each server uses a different port
+
+        - a port is used just like a channel on a TV
+            - different ports are used for different network services, just like different channels are used for different content
+        
+        - a port will be defined as an int number between 1024 and 65535
+            - port numbers smaller than 1024 are well-known ports
+                - telnet uses port 23, http uses 80, ftp 21, so on
+        
+        - if you are writing your own server then care must be taken to assign a port to your server
+            - you should make sure taht this port should not be assigned to any other server
+
+    Port and Service Function
+        - the following functions are provided to fetch service names the /etc/services file
+        - struct servent *getservbyname(char *name, char* proto)
+            - takes a service name and a protocol name and returns the corresponding port number for that service
+        - struct servent *getservbyport(int port, char* proto)
+            - takes a port number and a protocol name and returns the corresponding service name
+        - the return value for each function is a pointer to a structure
+
+        struct servent {
+            char *s_name;
+            char **s_aliases;
+            int s_port;
+            char *s_proto;
+        };
+
+    IP Address functions
+        - the below functions are for IP Address functionality
+        
+        - int inet_aton(const char* strPtr, struct in_addr* addrptr);
+            - converts the specified string, in the Internet standard dot notation, to a network address, and stores the address in the struct provided
+        
+        - in_addr_t inet_addr(const char* strptr);
+            - converts the specified string, in the Internet standard dot notation, to an integer value suitable for use as an Internet address
+
+        char *inet_ntoa(struct in_addr inaddr)
+            - converts the specified internet host address to a string in the internet standard dot notation     
+
+    Structures used for support of the main functions
+        - various structures are used in socket programming to hold information about the address and port, and other information
+        - socket address struct are an integral part of every network program, most socket functions require a pointer to a socket address structure as an argument
+            - we allocate them, fill them in, and pass pointers to them to various socket function
+        - we always pass these structs by reference (we pass a pointer to the structure, not the struct itself), and we always pass the size of the struct as another arg
+        - when a socket function fills in a struct, the length is also passed by reference, so that its value can be updated by a function
+        - always set the structure variable to NULL, otherwise it may get unexpected junk values in your struct
+
+        - sockaddr is a structure that holds the socket information
+            - this is a generic socket address struct, which will be passed in most of the socket functions
+        
+        struct sockaddr{
+            unsigned short sa_family;
+            char sa_data[14];
+        };
+
+        - sa_family can be the follwing: AF_INET, AF_UNIX, AF_NS, AF_IMPLINK
+            - represents the address family
+            - in most of the internet based apps, we use AF_INET
+        
+        - sa_data is a protocol-specific address
+            - we will use port number IP address, which is represented by sockaddr_in struct
+        
+        - sockaddr_in is a struct that helps you to reference to the socket's elements
+
+        struct sockaddr_in {
+            short int sin_family;
+            unsigned short int sin_port;
+            struct in_addr sin_addr;
+            unsigned char sin_zero[8];
+        };
+
+        - in addr is used only in the above struct as a struct field and holds 32 bit netid/hostid
+
+        struct in_addr{
+            unsigned long s_addr;
+        }
+
+        - hostent is a struture is used to keep information related to host
+
+        struct hostent {
+            char *h_name;
+            char **h_aliases;
+            int h_addrtype;
+            int h_length;
+            char **h_addr_list;
+
+            #define h_addr h_addr_list[0]
+        };
+
+        Steps in using sockets to communicate
+            - create a new socket for network communication
+            - attach a local address to socket (bind)
+            - announce willingness to accept connection (listen)
+            - block caller until a connection request arrives (accept)
+            - actively attempt to establish a connection (connect) 
+            - send some data over connection (send)
+            - receive some data over connection (receive)
+            - release connection (close)
+
+                - need a lot of APIs to do this 
+        
+    Sockets versus File I/O
+        - working with sockets is very similar to working with files
+        - the socket() and accept() functions both return handles (file descriptor)
+            - reads and writes to the socket requres the use of the handles (file descriptors)
+        - in linux, sockets and file descriptors also share the same file descriptor table
+        - sockets have addresses associasted with them whereas files do not
+        - you cannot randomly access a socket like you can a file with lseek()
+        
+    Socket functions
+        - most of the functions are used by both the client and the server with exception of bind() - server
+            connect() - client
+        
+        - need <sys/types.h> 
+
+    Socket Function
+        - to perform network I/O, the first thing a process must do is call the socket()
+            - specifying the type of communcication protocol desired and protocol family
+        
+        int socket(int family, int type, int protocol);
+            - family specifies the protocol family and is usually the constant AF_INET for IPV4 protocols and AF_INETc for IPV6 protocols
+        
+        - type specifies the kind of socket you want and this is usually set to SOCK_STREAM for a stream socket or SOCK_DGRAM for a datagram socket
+
+        - protocol is the third and should be set to the specific protocol type you are using
+
+            - IPPROTO_TCP - TCP transport protocol
+            - IPPROTO_UDP - UDP protocol
+            - IPPROTO_SCTIP - SCTP protocol
+
+        - returns a socket descriptor that you can use in later sys calls or -1 on error
+
+        - the setsockopt function helps in manipulating options for the socket referred to by the descriptor sockfd
+            - optional
+            - prevents errors such as "address already in use"
+
+        - int setsockopt(int sockfd, int level, int optname, const void* optval, socklen_t optlen);
+
+    Connect Function
+        - used by client
+        
+        int connect(int sockfd, struct sockaddr* serv_addr, int addrlen);
+
+            - sockfd is a socket descriptor returned by the socket function
+            - serv_addr is a pointer to struct that contains destination IP addr and port
+            - addrlen is set to sizeof(struct sockadd);
+            - returns 0 if successful -1 if not
+        
+    Bind function
+        - when a server starts up, it needs to tell the operating sys which port it is going to use
+            - called binding the port
+        
+        - one a server program has created a socket named it wiht bind() giving it an IP addr and port number
+
+        int bind(int sockfd, struct sockaddr *my_addr, int addrlen);
+
+            - sockfd is a socket descriptor returned by the socket function
+            - my_addr is a pointer to the struct sockaddr that contains the local IP addr and port
+                - a 0 vaue for port num means that the sys will choose a random port, and INADDR_ANY value for IP addr means the server's IP addr will be auto assigned
+            
+            server.sin_port = 0; <=> server.sin_addr.s_addr = INADDR_ANY;
+
+                - addrlen is set to sizeof(struct sockaddr)
+
+                - returns a 0 if it successfully binds -1 otherwise
+
+    Listen Function
+        - is your server becomes popular, you will probably get lots of clients connecting to it at once
+
+        - the listen() system call tells the OS how long you want the que to be
+
+        - calling listen() with a que length of 10 means that up to 10 clients can try to connect at once
+            - llth will get a message saying server is too busy
+
+        - listen is only called by server
+
+        int listen(int sockfd, int backlog);
+            - sockfd is a socket descriptor
+            - backlog is the max number of allowed connections
+        
+    Accept Function
+        - once you have bound to a port and setup a listen queue, you then just have to wait
+
+        - servers spend most of their lives waiting for clients to contact them
+
+        - the accept() sys call waits until a client contacts the server, and then it returns a socket descriptor that you can use to hold a converstation on
+
+        int accept(int sockfd, struct sockaddr *cliaddr, socklen_t *addrlen);
+
+        - sockfd is a socket descriptor returned by a socket function
+        - cliaddr is a pointer to a struct that contains the IP addr and port
+        - addrlen should eb set to sizeof(struct sockaddr) 
+    
+        - returns a non-zero descriptor on sucess, otherwise -1
+
+    recv function
+        - the recv function is used to receive data over stream sockets or connect diagram sockets
+        
+        int recv(int sockfd, void* buf, int len, unsigned int flags);
+
+            - sockfd is a socket descriptor
+            - buf is the buffer to read info into
+            - len is the max len of buffer
+            - flags is set to 0
+            - returns the number of bytes read into the buffer, otherwise -1 on error
+        
+    recvfrom function
+        - the recvfrom() is used to receive data from unconnected diagram sockets
+
+        int recvfrom(int sockfd, void *buf, int len, unsigned int flags struct sockaddr *from, int *fromlen);
+            - sockfd is a socket descriptor
+            - buf is the buffer to read info into
+            - len is the max len of buffer
+            - flags is set to 0
+
+            - from is a pointer to struct sockaddr for the host where data has to be read
+            - fromlen should be set to sizeof(struct sockaddr)
+
+            - returns the number of bytes read into the buffer, otherwise -1 on error
+        
+    
+    Write Function
+        - the write function attempts to write nbytes from the buffer pointed by buf to the file associasted with the open file descriptor
+
+        int write(int fildes, const void *buf, int nbyte);
+
+            - fildes is a socket descriptor
+            - buf is a pointer to the data you want to send
+            - nbytes is the number of bytes to be written
+                -if nybte is 0, write() will return 0 and have no other results if the file is a regular file otherwise result is unspecified
+
+    Send Function
+        - the send function is used to send data over stream sockets or connected datagram sockets
+            - if you want to send data over unconnected datagram sockets you must use sendto() function
+
+        int send(int sockfd, const void *msg, int len, int flags);
+            - sockfd is file descriptor
+            - msg is a pointer to the data you want to send
+            - len is the len of the data you want to send
+            - flags should be set to 0
+            - returns the number of bytes read into the buffer, otherwise -1 on error
+
+    Sendto Function
+        - the sendto function is used to send data over unconnected datagram sockets
+        - int sendto(int sockfd, const void *msg, int len, unsigned int flags, const struct sockaddr *to, int tolen);
+            - sockfd is file descriptor
+            - msg is a pointer to the data you want to send
+            - len is the len of the data you want to send
+            - flags should be set to 0
+            - to is a pointer to struct sockaddr for the host where data has to be sendto
+            - tolen is sizeof(struct sockaddr)
+
+    Read Function
+        - the read function attempts to read nbytes from the file associasted with the buffer, fildes, into the buffer pointed to by buf
+
+        int read(int fildes, const void *buf, int nbytes);
+    
+    Close function
+        - the close function is used to close comms between client and server
+        
+        int close(int sockfd);
+
+    Shutdown Function
+        - the shutdown function is to gracefully close the comms between client and server
+        
+        int shutdown(int sockfd, int how);
+            - How:
+                0 - indicates that receiving is not allowed
+                1 - indicates that sending is not allowed
+                2 - indicates that both sending and reciving is not allowed
+                    2 is the same as close()
+            
+            - returns 0 if successful & 1 if not
+
+Creating a Server Socket
+    - the steps involved in establishing a socket on the server side are as follows:
+        - create a socket with the socket() sys call
+        - bind the socket to an address using the bind() sys call
+        - accept a connection with the accept() sys call
+            - typically blocks the connection until a client connects with the server
+        - send and receive data using the read()/recv and write()/send sys calls
+    
+    
