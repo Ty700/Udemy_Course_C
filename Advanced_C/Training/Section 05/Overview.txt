@@ -1,0 +1,267 @@
+Storage Classes
+    - storage classes are used to describe the features of a variable/function
+        - include the scope, visibility, and life-time
+        - help us to trace the existence of a particular varaible during the runtime of a program
+    
+    - the lifetime of a variable is the time period during which a variable exist in computer memory
+        - some exist briefly, some are repeatedly created and destroyed, and others exist for the entire execution of a program
+    
+    - the scope of the variable is where the variable can be referenced in a program
+        - some can be referenced throughout a program, others from only portions of a program
+    
+    - the scope of the variable is where the varaible can be referenced in a program
+
+    - a vaiable's visibility or linkage, dertermines for a multi-soruce-file program whether the identifier is known only in the current source file or in any source file with
+        proper declarations
+    
+Auto Storage Class
+    - C provides four storage classes, indicated by their storage class specifiers
+        - auto
+        - register
+        - extern
+        -static
+    
+    - the four storage-class specvifiers can be split into two storage durations 
+        - automatic storage duration
+        - static storage duration
+    
+    - keyword auto is used to declare variables of automatic storage duration
+        - created when the block in which they are defined is entered
+        - exist while the block is active
+        - destroyed when the block is exited
+
+        - essentially a local variable
+
+    Local Variables
+        - variables only accesible in a block of code
+        - local variables have automatic storage duratin by default
+
+        - so these variables are known as automatic local variables
+        
+        - the value of a local variable can only be accessed by the function in which the variable is defined
+    
+        - the C compiler assumes by default that any variable defined within a function is an automatic local variable
+            - the keyword auto is seldom used
+            - implictly there
+        
+        - C++ has repurposed the auto keyword for a quite differnt use, so simply not using auto as a storage class specifer is better for C/C++ compatibility
+
+    Why use Auto?
+        - automatic storage is a means of conserving memory
+        
+        - automatic storage is an example of the principle of least privilege
+
+        - why have variables stored in memory and accesible when in fact they are not needed?
+
+    Syntax
+        auto <var_type> <var_name> = <value>;
+    
+        Example:
+            auto int i = 0; <=> int i = 0;
+    
+External Storage Class
+    - simply tells us a variable is declared elsewhere
+        - not within the same block
+    
+    - an extern variable is a global variable init with a legal value where it is declared in order to be used elsewhere
+        - an extension to the concept of the global variable
+    
+    - the main purpose of using extern variables is that they can be accessed between two different files which are part of a large program
+        - functins contained in separate files can communicate through external variables
+
+    - the extern storage class is used to give a reference of a global variable that is visible to ALL program files
+
+    - inside the module that wants to access the external variable
+        - the variable data type is preceded with the keyword extern in the declaration
+            - tells the compiler that a globally dedfined variable from another file is to be accessed
+        
+    - suppose you want to define an int called moveNumber
+        - you want to access the value and possibly modify it within a function contained in another file
+    
+    int moveNumber = 0;
+
+    - declare the above at the beginning of your program, outside of any function
+        - its value could be referenced by any function within that program
+        - moveNumber is defined as a global variable
+    
+    - this same definition of the variable moveNumber also makes its values accesible by functions contained in other files
+
+    - this statement defines the variable moveNumber not just as a global variable, but also as an external global varaible
+
+    - to reference the value of an external global variable from another module:
+        extern int moveNumber;
+
+        - the value of moveNumber can now be accessed and modified by the module in which the preceding declaratin appears
+    
+    - other modules can also access the value of moveNumber if it has the above decalarition
+
+    - you must obey an important rule when working with external variables
+        - the variable has to be defined in some place among other source files
+    
+    - the first way is to declare the variable outside of any function, not preceded by the keyword Extern
+        int moveNumber;
+    
+    - the second way to define an external varaible is to declare teh variable outside of any funtion, placing the keyword extern in front of the declaration
+        - explicitly assigning an init value to it
+    
+    extern int moveNumber = 0;
+        - this creates an external global variable
+    
+    - these two ways are mutually exclusive
+
+    Example:
+        int i = 5; //global variable
+
+    Extern Specifier for functions 
+        - when a function is defined, it can be declared to be extern explicitly
+        - an extern function can be called from a file where it is not defined 
+            - where it does not need to be defined in a header file
+        
+        Example:
+            extern double foo(void){}
+        
+            - the definition of the foo function effectively becomes globale to any file in the program
+                - can also be used outside the file
+        
+Static Storage Class
+    - the static storage class can be used on local and global variables as well as functions
+
+    - when applied to local variables it instructs the compiler to keep the variable in existence during the life-time of a program
+
+    - when applied to global variables, the static modifer causes the variable's scope to be restricted to the file in which it is declared
+
+    - when applied to functions, the static funtion can be called only from within the same file as the function appears
+
+    Automatic and Static Variables (local statics)
+        - we know that when you normally declare a local variable inside a function
+            - you are declaring automatic local variables
+            - recall that the keyword auto can, in fact, preced the declaratikon of such variables
+            - an auto variable is acutally created each time the function is called and destroyed upon exited
+        
+        - automatic local varaibles init values
+            - the value of the expression is calculated and assigned to the automatic local variable each time the funtion is called
+            - beacuse an auto variable disappears after the function completes, the value of the variable disappears along with it
+            - the values an auto var has when a function finishes execution is guranteed not to exist the next time the function is called
+
+        - static varaibles have a property of preseving their value even after they are out of their scope
+            - static vars preserve the value of their last use in their scope
+            - no new memory is allocated beacuse they are not re-declared
+            - their scop is local to the function to which they were defined
+        
+        - making local variables static allows them to maintain their values between function calls
+            - does not create and destroy the local variable each time it comes into and goes out of scope
+        
+    Initialization of local static variables
+        - a static, local variable is inited only once at the start of overall program execution
+            - not each time that the function is called
+        
+        - the init value specified for a static variable must be a simple constant or expression
+
+        - static variables also have default init values of zero, unlike automatic variables, whcih have no default init value
+
+        - static variables are allocated memory on the heap, not the stack
+    
+    Static Versus Extern Variables (global statics)
+        - there are situations that arise in which you want to define a variable to be global but not external
+        
+        - you want to define a global variable to be local to a particular file
+            - it makes sense to want to define a varaible this way if no functions other than those contained inside a particular file need access to the variable
+        
+        - it these situations, you should define the variable to be static
+            - by default, they are assigned the value 0 by the compiler
+    
+        - if the below declartion is made outside of any function
+            - makes the value of the variable accesible from any subsequent point in the file in which the definition appears
+                - not from functions contained in other files
+            
+        static int moveNumber = 0;
+
+        - if you need a global variable whose value does not have to bne accessed from another file
+            - declare the variable to be static
+            - declare it outside of any function
+        
+        - the static declartion more accurately reflects the usage of the variable
+        
+    Static and Extern Variables on function
+        - when a function is defined, it can be declared to be extern or static
+            - default is to be extern
+        
+        - a static function can be called only from within the same file as the function appears
+        
+        static double foo(double x) {}
+
+        - the definition of the foo function effectively becomes local to the file which it is defined in
+            - cannot be accessed form outside file(s)
+    
+    Static and structs
+        - static variables should not be declared inside a structure
+
+        - the C compiler requres the entire struct elements to be placed together
+            - since static is on the heap, it makes it not together
+
+        - it is possible to declare a struct:
+            - inside a function
+            - allocate memory dynamically
+            - it can even be global
+        
+        - whatever might be the case, all struct members should reside in the same memory segment
+            - the value for the structgure element is fetched by counting the offset of the element from the beginning address of the struct
+        
+        - separating out one member alone to a data segment defeats the purpose of a static variable
+
+        - it is possible to have an extire struct as static
+            - can't have any static members in a struct
+        
+Register Storage Class
+    - a processor register (CPU register) is one of a small set of data holding palces that are part of the computer processor
+        - a register may hold an instruction, a storage address, or any kind of data
+    
+    - the register storage class is used to define local variables that should be stored in a register instead of RAM (memory)
+        - makes the use of register variables to be much faster than that of the variables stored in the memory during the runtime of the program
+    
+    - the register storage class should only be used for variables that require quick access
+        - the variables which are most frequently used in a C program
+        - if a functin uses a uses a particular variable heavily
+    
+    - the keyowrd register hints to the compiler that a given variable can be put in a register
+        - it is the compiler's choice to put it in a register or not
+        - MIGHT be stgored in a register depending on hardware and implementation restrictions
+        - generally, compilers themselves do optimizations and put the variables in registers
+
+    - the keyword reg is used to define register storage class
+    
+    - both local variables and formal parameters can be declared as register variables
+
+    - this storage class declares register variables which have the same functionality as that of the auto variables
+        - the lifetime of reg variables remains only when control is within the block
+
+    - the variable stored in a register has a maximum size equal to the register size
+
+    - you cannot obtain the address of a register variable using pointers
+        - can not have the unary '&' operator applied to it (as it odes not have a memory location)
+    
+    Example:
+
+        int main(){
+            register int x;
+
+            for(x = 1; x <= 15; x++){
+                printf("%d\n",x);
+            }
+
+            return 0;
+        }
+
+        - not the best example since its not being accessed a ton
+            - only 15 times
+
+        - again, registers don't have a memory location, thus can't print out &x
+
+        - register can not be used with static
+            - can't use two keyword like extern static int x
+        
+        - can't be a global variable, can only be used for a global scope
+            - global register int x = 10; //error
+        
+
+

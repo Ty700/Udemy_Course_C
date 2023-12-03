@@ -1,0 +1,152 @@
+Section 1 - 3 were not important.
+
+Intro to the class, teacher, etc
+
+Communication between Files
+    External Variables
+        - functions contained in seperate files can communicate through external Variables
+            - an extension to the concept of the global variable 
+        
+        - an external variable is one whose value can be accessed and changed by another module (file)
+
+        - inside the module that wants to access the external variable
+            - the variable data type is preceded with the keyword extern in the declaration
+                - tells the compiler that a globally defined variable from another file is to be accessed
+        
+        - suppose you want to define an int variable called moveNumber
+            - you want to access the value and possible modify it within a functin contained in another file
+        
+        - int moveNumber = 0;
+
+        - declare the above, at the beginning of the program, outside of any functions
+            - its value could be referenced by any function within that program
+            - moveNumber is defined as a global variable
+            - this same definition of the variable moveNumber also makes its value accessible by other functions contained in other files
+
+        - the statement defines the varaible moveNumber not just as global, but also extern
+
+        - to reference the value of an external global varaible from another module
+            - you must declare the varaible to be accessed preceding the declaration with the keyword extern
+
+        extern int moveNumber;
+
+        - the value of moveNumber can now be accessed and modified by the module in which the preceding declaratin appears
+
+        - other modules can also access the value of moveNumber by incorporating a similar exter decalartion in the file
+
+    Static vs Extern Variables
+        - ther are situations that arise in which you want to define a varaible to be global but not external
+        - you want to define a global variable to be local to a particular file
+            - it makes sense to want to define a variable this way if no function other than those contained inside a particular file need access to the particular varaible
+        
+        - if the below declaratin is made outside of any function
+            - makes the value of the variable accessible from any subsequent point in the file in which the definition appears
+                - not from functions contained in other files
+
+        static int moveNumber = 0;
+            - if you need to define a global variable whose value does not have to be accessed from another file
+                - declare it as Static
+                - a cleaner approach to programming
+            
+            - the static decalartion more accurately reflects the variable usage
+                - no conflicts can be created by two files that unknowingly both use different external global variables of the same name
+
+Using Header Files Effectively
+    - include files are great for grouping all your commonly used definitions inside a file
+    
+    - you can then simply include the file in any program that needs to use those definitions
+    
+    - no where is the usefulness of the #include facility greater than in developoing programs that have been divided into separate program files
+    
+    - if more than one programmer is working on developing a particular program, inclujde files provide a means of standardization
+        - each programmer is using the same definitions, which have the same values
+        - each programmer is also spared the time-consuming and error-prone task of typing these definitions into each file that must use them
+    
+    - by centralizing the definition of common data structures into one or more include files
+        - you eliminate the error that is caused by two files that use different definitions for the same data structures
+        - if a change has to be made to the definition of a particular data structure, it can be doen in one place only - inside the include file
+
+Heap and Stack Memory Allocation
+    - there are three forms of memory that you can use in your program
+        - static
+        - Stack
+        - Heap
+    
+    - in this lecture, we wil discuss these three types with a focus on the heap and Stack
+    
+    - each type of memory determines where andhow it is sorted
+
+    - it is very important to understand where and how it is stored
+        - it gives you a strategic advantage for creating scalable problems
+
+    - you have to decide when to use memory from the stack vs heap or static memory based on each problem you are trying to solve
+
+    - static memory persists throughout the entire life of the program
+        - usually used to store things like global variables, or varialbes created with static clause
+    
+    Stack
+        - the stack is a special region of memory that stores temp variables
+            - used to store variables that asre created inside of functions
+            - easier to kjeep track of because the memory is only locally available in the function
+        
+        - stack is a last in first out LIFO data struct managed by the CPU
+            - a linear data struct
+            - there is no need to manage the memory yourself
+
+        - the stack grows and shrinks as vars are created and destroyewd inside a function
+        
+        - there is a limit on the size of varaibles that can be stored on the stack
+
+        - is a program tries to put too much info on the stack, stack overflow will occur
+            - happens when all memory in the stack has been allocated, and further allocations happens
+
+        - stack memory is dividied into successive frames where each time a function is called, it allocates itself a fresh stack frame
+
+        - a key to understanding the stack is the notion that when a function exits, all of its variables are popped off the stack
+            - thus stack vars are local in nature
+
+        - stack vars only exist while the function that created them is running
+
+    Heap
+        - opposite of the stack
+
+        - a hierarchical data struct
+
+        - dynamic memory
+
+        - not automatically managed
+
+        - the heap is managed by the programmer
+            - the memory is accessed through the use of pointers
+            - you have to explicitly allocate (malloc) and deallocate (free) memory
+            - failure to free the memory when finished with it will result in memory leaks
+        
+        - there are generally no restrictions on the size of the heap (or vars it creates)
+            - other than the physical size of memory on the machine
+        
+        - variables created on the heap are accessible anywhere in the program
+            - essentially in global scope
+
+        - heap memory is slightly slower ot be read from and written to
+
+    When should I use heap or stack
+        - use the heap:
+            - when you need to allocate a large block of memory
+                - a large array
+                - a large struct
+            - when you need to keep that variable around a long time
+
+            - when you need variables like arrays and structs that can change in size dynamically
+                - arrays that can grow and shrink as needed
+        
+        - use the stack when:
+            - you are dealing with relatively small varaibles that only need to persist as long as the function using them is alive
+                - easier and faster
+
+            
+
+
+
+
+
+    
