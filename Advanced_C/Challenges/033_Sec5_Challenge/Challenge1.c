@@ -21,5 +21,4 @@ static float func1(void){
 int main(){
     int var1;
     register int var5 = 5;
-
 }

@@ -1,0 +1,153 @@
+Advanced Data Types
+
+The #define statement
+    - the #define preprocessor directive (like all preprocessor directives), begins with the # sign
+        - can be preceded by spaces or tabs
+        - allows for space between the # and the remainder of the directive
+    
+    - in C programming you can use this directive to define symbolic constants 
+
+    - preprocessor directives run until the first new line following the #
+        - a directive is limited to one line in length
+        - the combination backslash/newline is deleted before preprocessing begins
+            - you can spread the directive over serveral physical lines
+                - these lines still constiture a single logical line
+    
+    - typicall define statements appear first in the program
+
+    - most programmers group their define statements at the beginning of the program or in an include file
+    
+    - by convention, #define names are defined using only uppercase letters and underscores
+
+    - one of the primary uses of the define statment is to assign symbolic names to program constants
+
+    #define YES 1
+
+        - defines the name YES and makes it 1
+        - each time the compiler sees YES it replaces it with 1
+            - kinda like a search and replace with the text editor
+
+    - the #define statement has a special Syntax
+        - no equal sign used to assign the value 1 to YES
+        - no semicolon
+
+    - a definition for a name can include mode than a simple constant value
+    
+    - a definition for a name can include an expression
+
+    - the following defines the name TWO_PI as the product of 2 and point
+        Example:
+            #define TWO_PI 2 * 3.1415192654
+
+    Null define
+        - the defined name NULL is frequently used by programmers to represent the null pointers
+        
+        - NULL is already defined on your system inside a file named <stddef.h>
+        
+        - by including a defintion such as:
+            #define NULL 0
+        
+    Benefits of #define
+        - using a defined name for a constant value helps to make programs more  readable
+
+        Eaxmple: When declaring an array with a size you could do:
+            float dataValue[1000];
+
+            later on you do:
+
+            for(i = 0; i < 1000; i++){
+                //Something
+            }
+
+            - say you want to change the size to 1001, now you have two places you have to change the value in.
+
+        A better way would be to do:
+
+        #define MAX_DATAVALUES 1000
+
+        float dataValue[MAX_DATAVALUES];
+
+        for(int i = 0; i < MAX_DATAVALUES; i++){
+            //Something
+        }            
+
+        - Now when you want to change it, you just have to change the define statement to 1001 and it changes the value everywhere else
+        
+    #define vs constant
+        
+        #define PI 3.14159f
+
+        - the above defines PI as a symbol that is to be replaced in the code by the string 3.14159f
+        - we could have defined PI as a variable, but to tell the compiler that its value is fixed
+        - you can fix the value of any variable when you declare it by prefixing the type name with the keyword const
+
+        const float Pi = 3.14159f;
+
+            - the advantage of defining Pi in this way is that you are now defining it as a constant numberical value with a specified type
+            - when using #define, PI is just a sequence of characters that replace all occurences of PI in your code
+        
+Using typedef
+    - the typedef keyword is an advanced feature in C that enables you to create your own name for an existing data type
+
+    - to define a new type name with typedef
+        - write the statmenet as if a variable of the desired type were being declared
+        - where the name of the declared variable would normally appear, substiture the new type name
+        - in front of everything, place keyword typedef
+
+        Example:
+
+            typedef int Counter;
+
+            - defines the name Counter to be = to the C data type int
+            - variables can subsequently be declared to be of type Counter
+
+            Counter j, n;
+
+            - the C compiler treats teh declaration of the variables j and n as normal int variables
+    
+    Advantages
+        - one advantage is in the added readability that it lends to the definition of the variables
+            - code is more readable when the names of the types lend insight into the meaning and intended use of a type
+            - it is clear from the defintion of what the intended purpose of certain variables are in the program
+
+        - another advantage is maintainability
+            - using typedef's instead of explicity types is analogous to using varaibles instead of explict numbers
+            - if the type used for a certain purpose needs to be changed, then only the typedef line needs to be changed
+                - when typedef's are not used, thousands of manual changes to the code are required
+    
+    Typedef vs #define
+        - many instances a typedef statement canbe equivalently subbed by the appropriate #define statement
+
+        #define Counter int;
+
+        - the typedef is handled by the C compiler
+            - provides more flexibility when it comes to assigning names to derived data types
+            - type check with typedef and not with #define
+        
+        - remember the typedef statement does not actually define a new type
+            - only a type name
+
+Variable Length Arrays
+    - Up until this point, all the arrays that you have used have had fixed dimensions that you specify in the code
+        - arrays are of constant size
+    
+    - What if you don't know an array's size of compilation time?
+        - to handle this you would have to use dynamic memory allocation with malloc
+
+    - a variable-length array is an array whose length, or size, is defined in terms of an expression evaluated at execution time
+        - enable you to work with arrays in your programs wihtout having to give them a constant size
+    
+    - the term variable-length array does not mean that you can modify the length of the array after you create it
+        - once created a VLA keeps the same size
+
+    - the term VLA means that you can use a variable when specifying the array dimensions when creating the array
+
+    Example:
+        size_t sizeOfArray = 100;
+
+        printf("Enter the number of elements you want to store: ");
+            scanf("zd", &sizeOfArray);
+        
+        int array[sizeOfArray];
+
+        - you can do multi-dimension array with all or only some dimensions as variables
