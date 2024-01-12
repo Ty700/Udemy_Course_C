@@ -91,29 +91,35 @@ void PrintXorOperator(int arr[]){
 
 void PrintShiftOperator(int arr[]){
     for(int i = 0; i < ARRAY_SIZE; i++){
-        long long bin = decimalToBinary(arr[i]);
+        long long currentDecAsBin = arr[i];
 
-    long long shiftedRightBinary = decimalToBinary(bin >> SHIFT_RIGHT);
-    long long shiftedLeftBinary = decimalToBinary(bin << SHIFT_LEFT);
+        long long shiftedRightDecimal = currentDecAsBin >> SHIFT_RIGHT;
+        long long shiftedLeftDecimal = currentDecAsBin << SHIFT_LEFT;
 
-    int shiftedRightDecimal = bin >> SHIFT_RIGHT;
-    int shiftedLeftDecimal = bin << SHIFT_LEFT;
+        int shiftedRightBinary = decimalToBinary(shiftedRightDecimal);
+        int shiftedLeftBinary = decimalToBinary(shiftedLeftDecimal);
 
-    printf("%d => %lld:\n\t%lld >> %d = %lld => %d\n", arr[i], bin, bin, SHIFT_RIGHT, shiftedRightBinary, shiftedRightDecimal);
-    printf("\t%lld << %d = %lld => %d\n\n",bin, SHIFT_LEFT, shiftedLeftBinary, shiftedLeftDecimal);
-}
+        // printf("shiftedRightBinary: %lld\nshiftedLeftBinary: %lld\n\n", shiftedRightBinary, shiftedLeftBinary);
+
+        printf("%d => %lld:\n", arr[i], decimalToBinary(arr[i]));
+        printf("\t%lld >> %d = %d => %lld\n",   decimalToBinary(arr[i]), SHIFT_RIGHT, shiftedRightBinary, shiftedRightDecimal);
+        printf("\t%lld << %d = %d => %lld\n\n", decimalToBinary(arr[i]), SHIFT_LEFT,  shiftedLeftBinary,  shiftedLeftDecimal);
+    }
 }
 
 int main(){
     int arr[ARRAY_SIZE];    
 
     CollectUserNumbers(arr);
-    // printf("First: %d\nSecond: %d", arr[0], arr[1]); #DEBUG
-
+    //!
     PrintNotOperator(arr);
+    //&
     PrintAndOperator(arr);
+    //|
     PrintOrOperator(arr);
+    //^
     PrintXorOperator(arr);
+    //<< and >>
     PrintShiftOperator(arr);
 
 
