@@ -12,7 +12,7 @@
 #include <math.h>
 
 #define ARRAY_SIZE 2
-#define SHIFT_LEFT 4
+#define SHIFT_LEFT 2
 #define SHIFT_RIGHT 4
 
 long long decimalToBinary(long long number){
@@ -60,7 +60,7 @@ void CollectUserNumbers(int arr[]){
 void PrintNotOperator(int arr[]){
     for(int i = 0; i < ARRAY_SIZE; i++){
         int currentDecimal = ~arr[i];
-        printf("!%d:\n\tDecimal: %d\n\tBinary:  %lld\n", arr[i], currentDecimal, decimalToBinary(currentDecimal));
+        printf("~%d:\n\tDecimal: %d\n\tBinary:  %lld\n", arr[i], currentDecimal, decimalToBinary(currentDecimal));
     }
     printf("\n");
 }
@@ -91,6 +91,7 @@ void PrintXorOperator(int arr[]){
 
 void PrintShiftOperator(int arr[]){
     for(int i = 0; i < ARRAY_SIZE; i++){
+        //Could do this without creating local vars butttt, this makes it more explicit
         long long currentDecAsBin = arr[i];
 
         long long shiftedRightDecimal = currentDecAsBin >> SHIFT_RIGHT;
@@ -111,7 +112,7 @@ int main(){
     int arr[ARRAY_SIZE];    
 
     CollectUserNumbers(arr);
-    //!
+    //~
     PrintNotOperator(arr);
     //&
     PrintAndOperator(arr);
