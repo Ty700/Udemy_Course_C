@@ -82,7 +82,6 @@ bool CheckNthBit(int* number, int* nthBit){
 //Sets the nth bit to 1 in a given number
 void SetNthBit(int* number, int* nthBit){
     *number |= (1 << *nthBit);
-    printf("\nBit set succesfully.\n\n");
 }
 
 int main(void){
@@ -93,10 +92,17 @@ int main(void){
     if(CheckNthBit(currentUserNumber, bitToCheck)){
         printf("%dth bit is set to 1.\n", *bitToCheck);
     } else {
-        printf("%dth bit is set to 0.\n", bitToCheck);
-        SetNthBit(currentUserNumber, bitToCheck);
-    }
+        printf("%dth bit is set to 0.\n\n", *bitToCheck);
 
+        printf("\nBit set succesfully.\n\n");
+
+        printf("Number before setting %d bit: %d\n", *bitToCheck, *currentUserNumber);
+
+        SetNthBit(currentUserNumber, bitToCheck);
+
+        printf("Number after setting %d bit: %d\n", *bitToCheck, *currentUserNumber);
+        
+    }
 
     free(currentUserNumber);
     free(bitToCheck);
