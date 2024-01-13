@@ -1,0 +1,151 @@
+Bit Manipulation
+    Binary Numbers and Bits
+        - I know this
+    
+Bitwise Operators (Logical)
+    - Bit Manipulation is the act of algorithmically manipulating bits or othe rpieces of data shorter than a word
+
+    - C offers bitwaise logical operators and shift operators
+        - operate on the bits in integer values
+
+    - &: AND
+    - |: OR 
+    - ^: XOR
+    - ~: NOT
+
+    - they operater on each bit independently of the bit to the left or right
+        - do not confuse them wiht regular logical operators (&&, ||, etc)
+    
+    - bit operations can be preformed on any type of integer value in C
+        - int, short, long, long long, and signed or unsigned
+        - and on characters, but cannot be performed on floating point values
+    
+    - one major use of the bitwaise and, and the biwise or, in operations to test and set individual bits in an int value
+        - can use individual bits to store data that involve one of two choise
+
+    - Example:
+        - you could use a single integer variable to store several characterristics of a person
+            - store whether the person is male or female wiht one bit
+            - use three other bits to specify whether the person can speak French, German, or Italian
+            - another bit to record whether the person's salary is $50,000 or more
+            - in just four bits you have a substantial set of data recorded
+
+Bitwise Operators (Shifting)
+    - C also has left-shift (<<) and right-shift (>>) operators
+        - each produces a value formed by shifting the bits in a pattern the indicated number of bits to the left or right
+
+        - for the left-shift operator, the vacated bits are set to 0
+        - for the right-shift operator, the vacated bits are filled with 0 if it is not signed
+
+Bit Mask
+    - A bit mask is data that is used for bitwise operations
+        - a bit pattern with some bits set to on, and some to off 
+
+    - A mask can be used to set multiple bits in a byte to either on, off or inverted from on to off using a single bitwise operator
+
+    - Imagine you want to create a program that holds a state, whcih is based on multiple values that are one or zero
+        - can store these values in different variables 
+        - or instead use a single integer variable and use each bit of its interneal 32 bits to represent the different true and false values
+
+    00000101
+        - the first bit is 1, which is true
+        - the second is 0, which is false
+            - these two bits represent two different topics
+
+    - bit masking allows you to use the C bitwise operators to manipulate the bits of an integer
+        - checking if particular bit values are present or not
+        - setting bits to on or off
+
+    - you apply a mask to a value to set or read the desired states of an integer variable
+
+    - to avoid information peeking around the edges, a bit mask should be at least as wide as the values it's masking
+
+    Using a bit mask with AND
+        - the bitwise AND operator is often used with a mask
+        - suppose you defgine the symbolic constant MASK as 2 (00000010)
+            - only bit number 1 being nonzero
+
+        flags &= MASK;
+
+        - the above would cause all bits of flags, except bit 1, to be false (0) now
+    
+        - we are "using a mask" because the zeros in the mask hide the corresponding bits in the flag
+
+    Using a bit mask with OR
+        - you often need to turn on particular bits in a value while leaving the remaingin bits unchanged.
+        - we can do this with OR
+
+        flags |= MASK;
+
+        - the above turn on bit number 1, but leave all other bits unchanged.
+    
+    Turning Bits Off using AND
+        - you often need to turn off particular bits in a value while leaving the remainging bits unchanged
+
+        - flags &= ~(MASK);
+
+        - this will set the bit number 1 to 0.  
+            flags =  0000 1111
+            MASKS =  0000 0010
+            ~MASKS = 1111 1101
+            flags & ~MASKS = 0000 1101 <= thus clearing a bit
+
+    Toggling Bits using Exclusive OR
+        - toggling a bit means turning it off, if it is on, and on if it is off.
+        
+        - flags ^= MASK;
+            - will toggle bit number 1
+    
+    Checking a value of a bit
+        - Does bit 1 set to 1?
+
+            - You must first mask the other bits in flags so that you compare only bit 1 of flags with MASK
+            //MASK = 0000 0010
+            if((flags & MASK) == MASK){
+                //Bit 1 is turned on
+            } else {
+                ///Bit 1 is off
+            }
+
+Using Bit operators to pack data
+    - You can pack info into an int/long or into a struct
+
+    - an int or a long can be used to conserve memory space
+
+    - flags that are used for a boolean true or false condition can be represented in a single bit on a computer
+        - each bit in the int can be a 1 or 0
+
+    Example:   
+        - suppose you want to pack five data values into a word because you have to maintain a very large table of these values in memory
+            - assume that three of these data values are flags f1, f2, and f3
+            - the fourth value is an integer called type, which ranges from 1 to 255
+            - the final value is an integer called index which ranges from 0 to 100,000
+
+        - storing the values of the flags f1, f2, and f3 only require 3 bits
+        - storing the values from 0 to 255 requires 8 bits
+        - storing the values from 0 to 100,000 requires 17 bits
+
+        17 + 8 + 3 = 28 total bits we need
+
+        unsigned int packed_data; //32 bits
+        
+        0000 0 0 0 00000000 00000000000000000
+        
+        - first (left to right) bits are unused
+        - f1, f2, f3, 0 to 255 bits (type), then 0 to 100,000 bits (index)
+
+        to set the type field of packed_data to 7 we would do:
+
+        packed_data |= (7 << 18);
+            - this shifts 7, in binary, over 18 spots (skipping the index portion) and turns on those bits
+        
+        - It is important to note that we are assuming the bits in packed_data are 0, we should really clear them first, then set
+
+        Thus:
+        
+        packed_data &= ~(1FE00); //1FE00 is 11111111 00000000000000000 in binary
+        
+        then or it with 7
+
+        - this method you have to calculate the bitmask, which in addition to the few lines of ANDing and ORing bits, 
+            it's no wonder we have found a new, more efficent way

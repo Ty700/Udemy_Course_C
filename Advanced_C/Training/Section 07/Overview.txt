@@ -1,0 +1,149 @@
+Type Qualifiers
+
+const
+    - type qualifiers can be used in front of varaibles to give the compiler more info about the intended use of the variable
+        - helps with optimizations
+    
+    - we will discuss the const, volatile, and restrict tpye qualifiers
+
+    - the compiler allows you to associate the const qualifier with variables whose values will not be changed
+    - if you try and change it, will error
+
+    - one of the motivations for the const attribute in the language is that it allows the compiler to place variable in read only memory
+
+    Syntax
+        const int value = 1;
+        const const const const int value1 = 1;
+            - works
+
+        typedef const int zip;
+        zip value3 = 1;
+            - valid
+
+        Can use it with pointers
+
+        const float* pf; 
+            - pf points to a a constant value 
+        
+        float* const pf;
+            - pointer address can't change, but value at the address can
+        
+        const float* const pf;
+            - const pointed to value and pointed to address
+        
+        float const* pf;
+            - same as const float* pf;
+        
+        void display(const int array[])
+            - function can't change elements in array
+        
+        - if you have const global variables, and want to use them in other files we have to do:
+
+        extern const <variable>;
+
+        Const vs #define
+            - #define is pre-processor directive
+
+            - const variables are actual varaibles like any other normal varialbes
+                - can pass them around, typecast, etc
+            
+            - #define is not scope controlled where const is
+
+            - const variable provides type checking by the compiler
+
+Volatile
+    - the volatile type qualifer tells the compiler explicitly that the specified variable will change its value
+
+    - it is provided so that a program can tell the compiler to suppress various kinds of optimizations
+        - prevents the compiler from optimizing away seemingly redundant
+            assignments to a variable
+        - prevents teh compiler from repeated examination of a variable wihtout its value seemingly changing
+
+        - essentially, prevents the compiler from "caching" variables
+
+        - the reason for having this type qualifer is mainly because of the problems that are encountered in real-time or embedded sys prog
+            - programs that have a lot of threading 
+            - programs where resources are scarce
+
+    Use cases 
+        - a variable should be declared volatile whenever its value could change unexpectedly
+
+        - the optimizer must be careful to reload the variable every time it is used instead of olding a copy in the register
+
+        - only three types of variables should use volatile
+            - memory mapped peripheral registers
+            - global variables (non-stack variables) modified by an ISR
+            - global variables accessed by multiple tasks within a multi-threaded application
+        
+        Syntax
+            - bascially the same
+
+            volatile int loc1; //loc1 is a volatile location
+            volatile int* pLoc; //pointer to a volatile location
+
+        Example
+
+            val1 = x;
+
+            /*SOME CODE NOT USING X LOTS OF IT*/
+
+            val2 = x;
+
+            - a smart optimizing compiuler might not notice that you use x twice without changing its value
+                - would temporarily store the x value in a register
+                - when x is needed for val2, it can save time by reading the value froma register instead of from the original mem location
+            
+            - this optimization is not desired if x is changed between the two statements by some other agency
+                - you would sue the volatile keyword to ensure that the compiler does not optimize and instead has a stgored value for each variable
+
+            - if the volatile keyowrd is not used in the decalarition, the compiler can assume that a value has not changed between usese, and it can then attempt to optimize the code
+        
+        - a value can be both const and volatile
+        
+        - a hardware clock setting normally should not be cahnged by the program
+            - make it const
+
+        - however, it is changed byh an agency other than the program
+            - make it volatile
+        
+        - useboth qualifiers in the declaration (order does not matter)
+
+        volatile const int loc;
+        const volatile int *pLoc;
+
+            - both are valid
+        
+Restrict
+    - the restrict type qualifer is an optimization hint for the compiler
+
+    - used in pointer declarations as a type qualifer for pointers
+        - tells the compiler that a particular pointer is the onl;y reference to the value it points to throughout its scope
+            - the same value is not referenced by any other pointer or variable within that scope
+            - the pointer is the sole initial means of accessing a data object
+        - tells the compiler it does not need to add any additional checks
+
+    - without the restrict keyword, the compiuler has to assume the worse case
+        - that some toher identifier might have changed the data in between two uses of a pointer
+    
+    - weith the restrict keyword used, the compiler is free to look for computational shortcuts
+
+    - if a programmer uses restrict keyword and violate the above condition, result is undefined behaviro
+
+    - not supported by C++
+
+    Syntax
+        int* restrict intPtrA;
+        int* restrict intPtrB;
+
+        - tells the compiuler that, for the duration of the scope in which intPtrA and intPtrB are defined
+            - they will never point to the same address
+        
+    Example:
+
+        int main(void){
+            int array[10];
+
+            int* restrict restart = (int *)malloc(10*sizeof(int));
+
+            int *par = array;
+        }
