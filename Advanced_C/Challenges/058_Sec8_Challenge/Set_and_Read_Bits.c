@@ -14,6 +14,9 @@
 *       
 *       Number before setting 2 bit: 10
 *       Number after setting 2 bit: 14
+*
+*
+*   Potential Bugs: Don't think this works for negative numbers and it's annoying.
 */
 
 #include <stdio.h>
@@ -28,8 +31,8 @@
 #define BOTTOM_BIT_LIMIT 0
 
 //Collects a number from the user
-u_int32_t* CollectNumber(void){
-    u_int32_t* number = (u_int32_t *)malloc(sizeof(u_int32_t) * 1);
+int32_t* CollectNumber(void){
+    int32_t* number = (int32_t *)malloc(sizeof(int32_t) * 1);
     printf("Enter any number: ");
         scanf("%d", number);
         fflush(stdin);
@@ -38,7 +41,7 @@ u_int32_t* CollectNumber(void){
 }
 
 //Checks to make sure the bit to check is within range
-bool ValidBitCheck(u_int32_t* bit){
+bool ValidBitCheck(int32_t* bit){
     if((*bit > TOP_BIT_LIMIT) || (*bit < BOTTOM_BIT_LIMIT)){
         return false;
     } else {
@@ -47,8 +50,8 @@ bool ValidBitCheck(u_int32_t* bit){
 }
 
 //Collects bit to check from user
-u_int32_t* CollectNthBit(void){
-    u_int32_t* bitToCheck = (u_int32_t *)malloc(sizeof(u_int32_t) * 1);
+int32_t* CollectNthBit(void){
+    int32_t* bitToCheck = (int32_t *)malloc(sizeof(int32_t) * 1);
 
     printf("Enter nth bit to check and set (0 - 31): ");
         scanf("%d", bitToCheck);
@@ -71,7 +74,7 @@ u_int32_t* CollectNthBit(void){
 }
 
 //Checks to see if nth bit is 1
-bool CheckNthBit(int* number, int* nthBit){
+bool CheckNthBit(int32_t* number, int32_t* nthBit){
     if((*number & (1 << *nthBit)) == (1 << *nthBit)){
         return true;
     } else {
@@ -80,14 +83,14 @@ bool CheckNthBit(int* number, int* nthBit){
 }
 
 //Sets the nth bit to 1 in a given number
-void SetNthBit(int* number, int* nthBit){
+void SetNthBit(int32_t* number, int32_t* nthBit){
     *number |= (1 << *nthBit);
 }
 
 int main(void){
-    u_int32_t* currentUserNumber = CollectNumber();
+    int32_t* currentUserNumber = CollectNumber();
 
-    u_int32_t* bitToCheck = CollectNthBit();
+    int32_t* bitToCheck = CollectNthBit();
 
     if(CheckNthBit(currentUserNumber, bitToCheck)){
         printf("%dth bit is set to 1.\n", *bitToCheck);
