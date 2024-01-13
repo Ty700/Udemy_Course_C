@@ -28,8 +28,8 @@
 #define BOTTOM_BIT_LIMIT 0
 
 //Collects a number from the user
-int* CollectNumber(void){
-    int* number = (int *)malloc(sizeof(int) * 1);
+u_int32_t* CollectNumber(void){
+    u_int32_t* number = (u_int32_t *)malloc(sizeof(u_int32_t) * 1);
     printf("Enter any number: ");
         scanf("%d", number);
         fflush(stdin);
@@ -38,7 +38,7 @@ int* CollectNumber(void){
 }
 
 //Checks to make sure the bit to check is within range
-bool ValidBitCheck(int* bit){
+bool ValidBitCheck(u_int32_t* bit){
     if((*bit > TOP_BIT_LIMIT) || (*bit < BOTTOM_BIT_LIMIT)){
         return false;
     } else {
@@ -47,8 +47,8 @@ bool ValidBitCheck(int* bit){
 }
 
 //Collects bit to check from user
-int* CollectNthBit(void){
-    int* bitToCheck = (int *)malloc(sizeof(int) * 1);
+u_int32_t* CollectNthBit(void){
+    u_int32_t* bitToCheck = (u_int32_t *)malloc(sizeof(u_int32_t) * 1);
 
     printf("Enter nth bit to check and set (0 - 31): ");
         scanf("%d", bitToCheck);
@@ -85,9 +85,9 @@ void SetNthBit(int* number, int* nthBit){
 }
 
 int main(void){
-    int* currentUserNumber = CollectNumber();
+    u_int32_t* currentUserNumber = CollectNumber();
 
-    int* bitToCheck = CollectNthBit();
+    u_int32_t* bitToCheck = CollectNthBit();
 
     if(CheckNthBit(currentUserNumber, bitToCheck)){
         printf("%dth bit is set to 1.\n", *bitToCheck);
