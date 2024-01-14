@@ -1,0 +1,71 @@
+goto
+    - goto statement causes a program control to jump to a particular line of code in your program
+        - thius branch is made immediately and unconditionally upon execution of the goto
+    
+    - to identify where in the program the branch is to be made, a label is needed
+
+    - a label is a name that is formed with the same rules as variable names
+
+    - the label is placed directly before the statement to which the branhc is to be made and must appeasr in the same function as the goto
+
+    - bad repuation b/c code is sequential but goto breaks that rule
+        - lazy programming
+        - hard to maintain
+    
+    - many gotos in a program can make it impossible to decipher
+        - spaghetti code
+    
+    - avoid gotos typically
+
+    - Generally only used for deeply nested loops or control structures
+
+NULL
+    - the null statement is an expression statement with the expression missing
+    - C permits a solitary semicolon to be placed wherever a normal program statement can appear 
+    - the null statement has the effect of doing nothing, but exists for syntactical reasons
+    - although the null statement might seem useless, it is often used by C programmers in while, for, and do loops
+    - it is useful when the syntax of the language calls for a statement but no expression evaluation
+
+Comma Operator
+    - C supports the use of a comma that cna be used in expressions as an operator
+        - has the lowest precedence of any C operator
+        - acts as a sequence point
+    
+    - A binary operator that evaluates its first operand and discards the result
+        - then evalues the second operand and returns this value and type
+            - because all operators in C produce a value, the value of the comma operater is that of the rightmost expression
+
+    - The comma operator can be used to seperate multiple expressions anwhere taht a valid C expression can be used
+
+    - the comma operator exists because there are times when you do not want to separate expressions with semicolons
+
+    - Not sure what this does tbh
+
+    Example:
+        while(i < 100){
+            sum += data[i], ++i;
+        }
+    
+    Example:
+        int i(5, 10); //i = 10 and not 5
+
+        int j = (f1(), f2()); //Why?
+
+        x = (y = 3, (z = ++y + 2) + 5);
+
+    - it just seems like a shorthand way of doing things that wil get confusing
+
+setjmp and longjmp
+    - kinda like goto but can jump into different functions
+
+    - setjmp saves a copy of the program counter
+
+    - longjmp will jump to the setjmp PC location
+
+    - goto can only jump within the function
+
+    - often referred to as "unwinding the stack," becausse you unroll activation recirds frin the statck until you get to the saved one
+
+    - the header file <setjmp.h> needs to be included in any src file that uses set and long jump
+
+    

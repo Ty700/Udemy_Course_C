@@ -149,3 +149,64 @@ Using Bit operators to pack data
 
         - this method you have to calculate the bitmask, which in addition to the few lines of ANDing and ORing bits, 
             it's no wonder we have found a new, more efficent way
+
+Bit Feilds to Pack data
+    - a bit field allows you to specify the number of bits in which an int member of a structure is stored
+        - uses a special syntax in the structure definition that allows you to define a field of bits and assign a name to that field
+        - should use the explicit declaraton signed int or unsigned int to avoid problems with hardware
+    
+    - bit fields enable better memory utilization by storing data in the minimum number of bits required
+        - format enables you to allocate a specified number of bits for a data item 
+        - can easily set and retrieve its value wihtout having to use masking and shifiting
+
+    - a bit feidl is declared by following an unsigned int member name with a colon
+        - an integer consttant is placed after the colon which represents the width of the field
+            - the number of bits in which the member is stored
+        - the constant representing the width must be an integer between 0 and the total number of bits used to store an int
+    
+    - bit field members of structs are accessed exactly as any other struct member
+
+    - it is possible to specify an unnamed bit field to be used as padding in the struct
+
+    - an unnamed bit field with a zero width is used to allign the next bit field on a new storage unit boundary
+
+    Example:
+
+    //Using same example as above
+    struct packed_data {
+        u_int32_t UNUSED    :3;
+        u_int32_t f1        :1;
+        u_int32_t f2        :1;
+        u_int32_t f3        :1;
+        u_int32_t type      :8;
+        u_int32_t index     :17;
+
+
+        //Extra Bit field info:
+
+        //You can have regular type members in addition to the bit field
+
+        int count;
+        char c;
+
+        //Bit fields can not be dimensioned
+        //Ex:
+        u_int32_t int f1    :1[5]; //Will not work
+
+        //No pointers to a bit field
+
+        //Can't init values in struct. Would have to do that when you create the struct in main or elsewhere.
+
+    };
+
+
+    int main(void){
+        struct packed_data data;
+
+        data.type = 7; //Will create the 8 bits of type to 8
+
+        //You can also extract this data by
+
+        u_int32_t bit = data.type; //Now bit = 7
+        
+    }

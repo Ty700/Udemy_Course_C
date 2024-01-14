@@ -1,0 +1,29 @@
+Char I/O Functions 
+
+Char Functions 
+    - getc
+    - getchar
+    - fgetc
+    - ungetc
+    - putc
+    - putchar
+    - fputc
+
+    - these functions are declarfed in stdio.h
+
+    - originally, I/O functions were not part of the definition of C 
+        - their development was left to C implementations
+        - the Unix implementation of C has served as a model for these functions
+    
+    - when a C program is executed, three files are automatically opened by the system for use by the program
+        - stdin, stdout, stderr
+        
+        - stdin identifies the standard input of the program and is normally associated with your terminal window
+            - all standard I/O fimctons that preform input and do not take a FILE pointer as an argument get their input from stdin
+            
+        - stdout referes to the standard output, which is normally also associated wiht your terminal window
+
+        - stderr identifies the error file
+            - where most of the error messagfes produced byh the system are written and is also normally your terminal window
+        
+    
