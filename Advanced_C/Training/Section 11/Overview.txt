@@ -1,0 +1,302 @@
+Advanced Function Concepts
+
+Variadic Functions
+    - variadic - some kind of change or variation is involved
+        - the variation or change is that there is an unknown amount of arguments
+
+    - we typically use a variadic function function when we do not know the total number of arguments that will be used for a function
+        - one single function could potentially have n number of arguments
+        - a variadic function will contribute to the flexibility of the program that you are developing
+    
+    - the concept of a variadic function is already used in several C's built-in Functions
+        - in printf when you want to print one or many numbers
+    
+            Example:
+                printf("%d %d %d %d ...", num1, num2, num3, num4, num...);
+    
+    - if you look at the stdio.h header, you can see taht this was implemented using varidic Functions
+
+    - I might need to make a variadic function, so lets learn
+
+    Using a variadic function
+        - function has two parts
+            - mandatory arguments
+                - at least one is required and is the FIRST one listed
+                - order is very important
+            - option arguments 
+                - listed after mandatory arguments
+        
+        - for the printf function  
+            - the first parameter is mandatory (" the first number = %d")
+            - the optional part comes second and it could be different (num1)
+            
+        - common practice is to have some number that will tell us how many arguments there are
+    
+    Creating a variadic function
+        - must understand how to reference the variable number of arguments
+            - you do not know how many there are and you can't give them names
+            - you can solve this problem indirectly through pointers
+        
+        - the stdarg.h lib header provides you with routines that are implemented as macros (look and operate like functions)
+            - you need to use these when implementing your own function with a variable number of arguments
+        
+        - va_list
+            - used in situations in which we need to access optional parameters and it is an argument list
+            - represents a data object used to hold the parameters corresponding to the ellipsis part of the parameter list
+        
+        - va_start
+            - will connect our argument list with some argument pointer
+            - the list specfied in the va_list is the first argument and the second argument is the last fixed parameter
+    
+        - va_arg 
+            - will fetch the current argument connected to the argument list
+            - we would need to know the type of the argument that we are reading
+        
+        - va_end
+            - used in situations when we would liek to stop using are variable argument list
+        
+        - va_copy
+            - used in situations for which we need to save our current location
+                - discussed in next lecture
+        
+        Step 1 When creating a variadic function
+            - to create a function with a variable number of arguments, perform the following steps
+
+            - provide a function prototype using and ellipsis (...)
+                - the ellipsis indicates that a varaible number of arguments may follow any number of fixed arguments
+                    - must have at least one fixed argument
+            
+            Example:
+                void func1(int n, ...);
+                int f2(const char *s, int k, ...);
+                char func(char c1, ..., char c2); **INVALID**
+                double f3(...); **INVALID**
+            
+        Step 2 and Step 3
+            - create a va_list type variable in the function definition
+            - init the variable to an argument list
+                - need to copy the argument list to the va_list varaible using va_start
+            
+            double average(double v1, double v2, ...);
+            va_list parg; //**POINTER FOR VARIABLE ARGUMENT LIST**
+            //More code to go here...
+            va_start(parg, v2); //**NOTE va_start 2nd argument is the LAST mandatory argument
+            //more code to go here
+
+            - first declare the variable parg of type va_list
+            - call va_start() with this as the first argument and specify the last fixed parameter, v2, as the second argument
+                - effect of the call to va_start() is to set the variable parg to point to the first variable argument that is passed to the function 
+                    when it is called
+                - still do not know what type of value this represents
+            
+        Step 4
+            - access the contents of the argument list using va_arg()
+                - takes two arguments: a type va_list variable and a type name
+                - the first time it is called, it returns the first item in the list
+                - the next time it is called, it returns the next item, and so on
+                - the type argument specifies the type of value returned
+                    - has to match the specification
+                
+            double function(int lim, ...);
+            va_list ap; //declare object to hold arguments
+            va_start(ap, lim); //inits ap to argument list
+
+            double tic = va_arg(ap, double); //Retrives the first argument
+            int toc = va_arg(ap, int); //retrieve second argument
+
+            - IT IS IMPORTANT TO KNOW THE TYPE OF DATA B/C
+                - if the first argument is 10.0, the above works.
+                - if the first argument is 10, it might not.
+                - the automatic conversion of double to int works for assignment does NOT take place here.
+        
+        Step 5
+            - you should clean up by using the va_end() macro as your last step
+                - essential to tidy up loose ends left by the process
+                - takes a va_list variable as its argument
+                    - resets the ap pointer to NULL
+                - if you omit this call, your program may not work properly
+                    - variable may not be usable unless you use va_start to reinit it.
+            
+            va_end(ap);
+    
+    Summary
+        - there must be at least one fixed parameter
+        - must call va_start() to init the value of the variable argument list pointer in your function
+            - this pointer must be declared as type va_list
+        
+        - there needs to be a mechanism to determine the type of each argument
+            - this pointer must be declared as type va_list
+        
+        - there neewds to be a mechanism to determin ethe type of each argument
+            - either there can be a default type assumed or there can be a parameter that allows the argument type to be determined
+                - for example, you could have an extra fixed argument in the average function() that would have the value 0 if the variable arguments were double and 1 if they were long
+            
+        - yo umust have a way to determine when the list of args is exhausted
+            -for exxample, the last argument in the variable arg list could have a fixed gvalue valled a sentinel value that can be 
+                detecxted bceause it's different from all the others
+            
+            - OR the first argument could specify the count of the number of args in total
+
+va_copy
+    - va_arg() does not provide a way to back up to previous arguments
+    
+    - it is possible that you may need to process a variable arg list more than once
+        - may be useful to presever a copy of the va_list type list variable
+        - use va_copy() - two args are both type va_list variables, copies the second arg to the first
+            Example:
+                va_copy(duplicate, original); //Where duplicate and original are declared type va_list
+
+        - the va_copy routine copies the va_list object in whatever state it is in
+            - if you have executed va_arg() with the original to extract argument values from the list prior to using the va_copy()
+                routine, the copy will be in an identical state to the original with some argument values already extracted.
+        
+            - technically should call it early to save the most amount of arguments in the list
+
+            - do not use the va_list copy as the destination for another copy operation before you have executed va_end() 
+
+Recurssion
+    - Functions call themselves
+    - A recursive function is a function that calls itself either directly or indirectly
+    - Recursive functions can be effectively used to succinctly and efficiently solve problems
+        - commonly used in applications in which the solution to a problem can be expressed in terms of successively applying the same
+            solution to subsets of the problem
+    - You are unlikely to come across a need for recursion 
+
+    - Can be confusing and tricky at first
+        - when a function calls itself, there is the immediate problem of how the process stops
+    
+    - When a recursive function is called with a base case, the function simply returns a result
+
+    - when the function is called with a more complex problem
+        - the function divides the problem into two conceptual pieces
+            - a piece that the function knows how to do
+            - a slightly smaller version of the original problem
+        
+    - the recursion step can result in many more such recursive calls as the function keeps working on the smaller problem
+
+    - for recursion to terminate, the sequence of smaller and smaller problems must converge on the base case
+        - when the function recognizes the base case, the result is returned to the previous function call
+            - a sequence of returns ensues all the way up the line until the original call of the function eventually returns the final result
+        
+    - recursive functions are most commonly illustrated by an example that calculates the factorial of a number
+        - the factorial of a postive integer n, written n!
+            - the factorial of 0 is 1
+
+        - 5! = 5 x 4 x 3 x 2 x 1
+
+        - n! = n x (n-1)!
+
+Inline Functions
+    - Normally, a function call has overhead when being invoked
+        - it takes execution time to setup the call, pass arguments, jump to the function code, and return
+    
+    - the point of making a function inline is to hint to the compiler that it is worth making some form of extra effort to call
+        the function faster than it would otherwise
+            - usually the compiler will substitute the code of the function into its caller
+                - the program no longer calls that function, the compiler replaces every call to an inline function with the code body of that function
+    
+    - the inline declaration is only advice to the compiler, which can decide to ignore it
+
+    - inline functions can improve the runtime performance of a program
+        - not guaranteed
+
+    -  inline functions can increase the size of the program
+        - it increases file size as the same function code is copied again and again in the program wherever it is called
+
+    - making a function inline has no effect on the logic of the program from the user's perspective
+
+    - it is suggested to only declare functions as inline if they are short and called frequently
+        - for a long function, the time consumed in calling the function is short compared to the time spect executing the body of the function
+            - no great savings in time using an inline version
+    
+    Declaring Inline Functions  
+        - you can declare an inline function b placing the keyword inline before the function declaration
+
+        Example:
+            inline void randomFunction();
+
+        - there are different places to create inline function defintions (same file or header file)
+        - for the compiler to make inline optimizations, it has to know the contents of the function defintions
+        - the inline function defintiion has to be inthe same file as the function call (internal linkage)
+        - should always use the inline function specifier along wiht the static storage-class specifier (using extern less portable)
+            - inline functions are usually defined before their first use in a file
+        Example:
+            inline static void foo(){ //inline defintion/prototype
+                //do something
+            }
+            
+        - if you have a multi-file program, you need an inline defintion in each file that calls the function
+            - the simplest way to accomplish this is to put the inline function defintion in a header file
+            - include the header file in those files taht use the function
+        
+        - an inline function is an exception to the rule of not placing exe code in a header file
+            - because the inline function has internal linkage, defining one in several files does not cause problems
+        
+_Noreturn Function
+    - C11 added a second function specifier
+        - _Noreturn
+            - the purpose of this specifier is to inform the user and the compiler that a particular function will not return control to the calling program when it completes execution
+                - informing the user helps to prevent misuse of the function
+                - informing the compiler may enable it to make some code optimizations
+            
+            - just like the inline function specfiier, the _Noreturn function specifier is a hint to the compiler
+                - using the _Noreturn function specvifier does not stop a function from returning to its caller
+                    - only a promise made by the programmer to the compiler to allow it some more freedome to generate optimized code
+                - the degree of acceptance is implemenation defined
+
+        - the exit() function is an example of a _Noreturn function
+            - a typical void function does return to the calling function
+            - it just does not provide an assignable value
+        
+        - if a function specfied with the _Noreturn functikon specifier violates its promise and eventually returns to its caller 
+            - the behavior is undefined
+            - you MUST NOT return from the function
+        
+        - compilers are envouraged, but not required to produce warnings or errors when a _Noreturn function appears to be capable of returning to its caller
+    
+    - the _Noreturn keyword appears in a function declaration
+        - the _Noreturn specifier may appear more than once in the same function declaration
+            - the behavior is the same as it appeared once
+        
+        - this specifier is typically used through the convenience macro noreturn
+            - provides in the header vile <stdnoreturn.h>
+            - using _Noreturn or noreturn is fine and equivalent
+
+    Example:
+        _Noreturn void foo(){
+            abort();
+        }
+
+        _Noreturn void goo(int i){
+            if (i > 0){
+                abort();
+            }
+        }
+
+        - abort kills the program, thus will not return.
+
+        _Noreturn void my_exit(void);
+
+        void my_exit(void){
+            printf("Exit..."\n);
+            exit(0);
+        }
+
+        int main(void){
+            my_exit();
+        }
+
+    Bad Example:
+        _Noreturn void foo(){
+            return 10; //BAD **UNDEFINED BEHAVIOR**
+        }
+
+        int main(void){
+            printf("Ready"\n);
+            foo();
+
+            printf("NOT over till now\n");
+            return 0;
+        }
+
+        
