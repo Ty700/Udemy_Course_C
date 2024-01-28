@@ -34,4 +34,201 @@ Conditional Compilation
         - trace the flow of program execution
 
     - conditional compilation enables you to control the execution of preprocessor directives and the compilation of program code
-        - each of the conditional preprocessor 
+        - each of the conditional preprocessor direcetives evaluates an identifier or a constant integer expression
+            - cast expressions, sizeof expressions, and enumeration constants cannot be evaluated in preprocessor directives
+    
+    Conditional Compilation commands
+        - includes a set of commands that tell the compiler to accept or ignore blocks of information or code according to conditions at the time of compilation
+
+        - the conditional preprocessor construct is much like the if selection statement
+        
+        - every #if construct ends with an #endif
+
+        - directives #ifdef and ifndef are provided as shorthad for 
+            #if defined(name) 
+            and
+            #if !defined(name)
+        
+        - multiple-part conditional preprocessor construct s may be tested with directives #elif and #else
+    
+    #ifdef 
+        - this directive checks whether an identifier is currently defined 
+            - identifiers can be defined by a #define directive or on the command line
+        
+        - to set an identifier, here is an example useing the define directive
+
+        #define UNIX 1 or #define UNIX
+
+        - most compilers also permit you to define a name to the preprocessor when the program is compiled
+            - use the special option -D to the compiler command
+        
+        - gcc -D UNIX program.c
+
+        - the general form of the #ifdef directive 
+            - #ifdef identifier
+            - identifiers cannbot be any keywords or enumeration constants
+            - if the identifier specified has been defined by the preporcesor 
+                - compile all the code up to the next #else of #endif, whichever comes first 
+                - if there is an #else, all code from the #else to the #endif is compiled if the identifier is not defined
+        
+        - the #endif directive ends the scope of the #if, #ifdef, #ifndef, #else, or #elif directives
+
+        - the #endif directive has the following syntax:
+
+        #endif
+
+    #ifndef 
+        - this directive checks to see if an identifier is not currently defined
+            - #ifndef is the negative of #ifdef
+            - often used to define a constant if it is not already defined
+        
+        - the #ifndef directive has the following syntax:
+            - #ifndef identifier
+        Example:
+            #ifndef SIZE
+                #define SIZE 100
+            #endif
+    
+    #if
+        - you can use the #if directive to test the value of a constant expression
+            - a constant expression is specified through a #define statement or via the command line when the program is compiled
+        
+        - the general form of the #if directive 
+            #if constant_expression
+
+        - the operand must be a constant int expression that does not contain any increment(++), decrement(--), sizeof, pointer, address, and cast operators
+            - you can also use relational and logical operators with #if direcetive
+        
+        - the constant expresion is subject to text replacement and can contain references to iddentifiers defined in previous #define directives
+
+        - if an identifier used in the expression is not currently defined, the compuler treats the identifier as though it were the constant zero
+
+    #else
+        - to complelment the #ifdef/#ifndef and #if directives, you have the #else directive
+            - works exactly the same way as the else statement does 
+            - identifies a group of directives to be executed or statements to be included if the #ifdef/#ifndef or #if condition fails
+
+        - the form #ifdef/#ifndef/#if #else is much like that of the C if else
+            - main difference is that the preprocessor does not recognize the braces syntax of marking blocks
+            - it uses the #else and the #endif to mark blocks of directives
+        
+        - with an #else directive, everything from the #else to teh #endif is done if the identifier is not defined
+    
+    #else Example:
+
+        #ifdef UNIX
+        #   define DATADIR "/unx1/data"
+        #else
+        #   define DATADIR "usr\data"
+        #endif
+
+            - the above has the effect of definingg DATADIR to "/unx1/data" if the symbol UNIX has been previously defined and to "\usr\data" otherwise
+
+            - you are allowed to put one or more spaces after the # that begins a preprocessor statement
+
+            - a value can also be assigned to the defined name of the command line
+
+    #elif 
+        - this directive is used for multiple-choice selections
+            - similar to the combined use of the else-if statement in C
+        
+        - the #elif direcetive has the general form
+        
+            #elif constant_expression
+    
+    Example:
+
+        #define US 0
+        #define UK 1
+        #define FRANCE 2
+            
+Include Guards and undef
+
+    - the #ifndef directive is commonly used to prevent multiple inclusions of a files
+    
+    - many include files include other files, so you may include a file explicitly that another include file has already included
+
+    - this is a problem as some function declarations, etc can only be defined once.
+
+    - the standard C header files uses the #ifndef technique to avoid multiple inclusiosn
+
+    - one problem is to make sure the identifier you are testing has not defined elsewhere
+        - use the filename as the identifer 
+    
+    #ifndef _STDIO_H
+    #define _STDIO_H
+    //code
+    #endif
+
+#undef directive
+    - another flexibility that you have with preprocessor directives is the ability to undefine an identifier you have previous defined
+
+    - on some occasions, you might need to cause a defined name to become undefined
+        - cancels an earlier #define directive
+    
+Pragma and error
+    - Other preprocessor directives
+
+    #pragam
+        - the #pragma directive lets you place compiler instructions in yuor src code
+            - lets you request special behavior from the compiler
+        
+        - this directive is most useful for programs that are unusually large or that need to take advantage of capabilities of a particular compiler
+
+        - #pragmas can be used  
+            - to control the amount of memory set aside for automatic variables
+            - to set the strictness of error checking
+            - to enable nonstandard language features
+
+        - the pragma (pragmatic information) direcive is part of the standard
+            - the maning of any pragma depends on the software implementation of the standard that is used
+            - generally, each compiler has its own set of pragmas
+        
+        - the syntax of the #pragma directive is:
+            #pragma token_name
+
+            - the pragma is usually folled by a single token 
+                - represents a command for compuler to obey 
+            
+            - there are only a limited list of supported tokens for each standard/compiler
+
+                - the set of commands that can appear in #pragma directives is differenct for each compiler
+                - need to reference the compiler documentation
+                - a pragma not recognized by the implementation is ignored
+
+        #pragma GCC dependency
+            - allows you to check the relative dates of the current file and another file
+            - if the other file is more recent than the current file, a warning is issued
+
+            - this pragma is useful if the current file is derived from the other file, and should be regenerated
+
+            #pragma GCC dependency "parse.y"
+            #pragma GCC dependency "/usr/include/time.h" rerun fixincludes
+        
+        #pragma GCC posion
+            - remove an identifer completely from the program
+            - sometimes there is an identifier that you want to remove completely from your program, and make sure that it is never used
+        
+        #pragma GCC system_header
+            - tells the compiler to consider the rest of the current include file as a system header
+                - code taht comes before the #pragma in the file is not affected
+            
+            - system headers are header files that come with the OS or compiler
+
+            - GCC gives code found in system headers special treatment
+
+            - this pragma can affect the severity of some diagnostic messages
+                - all warnings are suppressed while GCC is processing a system header
+                - macros defined in a system headder are immune to a few warnings wherever they are expanded
+
+        #prama once
+            - specifies that the header file containing this directive is included only once even if the programmer inclueds it mulitple times during a compilation
+            - works similar to using include Guards
+        
+        #pragma GCC warning "message"
+            - causes the preprocessor to issue a warning diagnostic with the text 'message'
+            - message contained in the pragma must be a single string literal
+
+        #pragma message "message"
+            - prints string as a compiler message oncompilation
+                - the message is informational only 
